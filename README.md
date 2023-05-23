@@ -1,4 +1,4 @@
-<img src="OnlineStore\src\main\resources\Screenshot.png">
+![./Screen.jpg](Screen)
 
 __Онлайн Магазин по перепродаже вещей на Java.__
 
