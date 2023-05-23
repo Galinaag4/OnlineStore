@@ -1,4 +1,4 @@
-![./Screen.jpg](Screen)
+![src](.\Screen.jpg)
 
 __Онлайн Магазин по перепродаже вещей на Java.__
 
