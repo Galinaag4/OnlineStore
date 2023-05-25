@@ -1,6 +1,7 @@
 package ru.skypro.homework.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -14,6 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class ImageController {
     @PatchMapping("/{id}")
     public ResponseEntity<?> updateAdsImage() {
-        return updateAdsImage();
+        return ResponseEntity.status(HttpStatus.valueOf(200)).build();
     }
 }

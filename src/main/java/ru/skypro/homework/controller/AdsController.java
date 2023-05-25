@@ -1,6 +1,7 @@
 package ru.skypro.homework.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,56 +13,56 @@ import org.springframework.web.bind.annotation.*;
 public class AdsController {
     @GetMapping()
     public ResponseEntity<?> getAds() {
-        return getAds();
+        return ResponseEntity.status(HttpStatus.valueOf(200)).build();
     }
 
     @PostMapping()
     public ResponseEntity<?> addAds() {
-        return null;
+        return ResponseEntity.status(HttpStatus.valueOf(200)).build();
     }
 
     @GetMapping("/{ad_pk}/comments")
     public ResponseEntity<?> getComments() {
-        return getComments();
+        return ResponseEntity.status(HttpStatus.valueOf(200)).build();
     }
 
     @PostMapping("/{ad_pk}/comments")
 
     public ResponseEntity<?> addComments() {
-        return addComments();
+        return ResponseEntity.status(HttpStatus.valueOf(200)).build();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getFullAd() {
-        return getFullAd();
+        return ResponseEntity.status(HttpStatus.valueOf(200)).build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> removeAds() {
-        return removeAds();
+        return ResponseEntity.status(HttpStatus.valueOf(200)).build();
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<?> updateAds() {
-        return updateAds();
+        return ResponseEntity.status(HttpStatus.valueOf(200)).build();
     }
 
     @GetMapping("/{ad_pk}/comments/{id}")
     public ResponseEntity<?> getComment() {
-        return getComment();
+        return ResponseEntity.status(HttpStatus.valueOf(200)).build();
     }
 
     @DeleteMapping("/{ad_pk}/comments/{id}")
     public ResponseEntity<Void> deleteComments() {
-        return deleteComments();
+        return ResponseEntity.status(HttpStatus.valueOf(200)).build();
 
     }
     @PatchMapping("/{ad_pk}/comments/{id}")
     public ResponseEntity<?> updateComments(){
-        return updateComments();
+        return ResponseEntity.status(HttpStatus.valueOf(200)).build();
     }
     @GetMapping("/{me}")
     public ResponseEntity<?> getAdsMe(){
-        return getAdsMe();
+        return ResponseEntity.status(HttpStatus.valueOf(200)).build();
     }
 }
