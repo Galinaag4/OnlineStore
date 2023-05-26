@@ -1,14 +1,19 @@
-package ru.skypro.homework.model;
+package com.example.onlinestore.model;
 
+
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import com.example.onlinestore.dto.Role;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.util.Objects;
 
 @Entity
-public class User {
+@ToString
+@EqualsAndHashCode
+public class UserModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,17 +22,21 @@ public class User {
     private String firstName;
     private String lastName;
     private String phone;
+    private Role role;
+    private String image;
 
-    public User(Long id, String username, String password, String firstName, String lastName, String phone) {
+    public UserModel(Long id, String username, String password, String firstName, String lastName, String phone, Role role, String image) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
+        this.role = role;
+        this.image = image;
     }
 
-    public User() {
+    public UserModel() {
 
     }
 
@@ -79,28 +88,22 @@ public class User {
         this.phone = phone;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User)) return false;
-        User user = (User) o;
-        return Objects.equals(getId(), user.getId()) && Objects.equals(getUsername(), user.getUsername()) && Objects.equals(getPassword(), user.getPassword()) && Objects.equals(getFirstName(), user.getFirstName()) && Objects.equals(getLastName(), user.getLastName()) && Objects.equals(getPhone(), user.getPhone());
+    public Role getRole() {
+        return role;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getUsername(), getPassword(), getFirstName(), getLastName(), getPhone());
+    public void setRole(Role role) {
+        this.role = role;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", phone='" + phone + '\'' +
-                '}';
+    public String getImage() {
+        return image;
     }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+
+
 }

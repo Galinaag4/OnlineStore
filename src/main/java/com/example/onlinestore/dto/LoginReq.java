@@ -1,4 +1,4 @@
-package ru.skypro.homework.dto;
+package com.example.onlinestore.dto;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package ru.skypro.homework.controller;
+package com.example.onlinestore.controller;
 
 
 import org.springframework.stereotype.Component;
