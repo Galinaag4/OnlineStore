@@ -1,4 +1,4 @@
-package ru.skypro.homework.dto;
+package com.example.onlinestore.dto;
 
 import lombok.Data;
 
@@ -9,6 +9,6 @@ public class User {
     public String firstName;
     public String lastName;
     public String phone;
-    private String Image;
+    private String image;
 
 }
