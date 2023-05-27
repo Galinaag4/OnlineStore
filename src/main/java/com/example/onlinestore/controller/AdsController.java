@@ -3,6 +3,7 @@ package com.example.onlinestore.controller;
 import com.example.onlinestore.dto.CreateAds;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,8 +19,8 @@ public class AdsController {
         return ResponseEntity.status(HttpStatus.valueOf(200)).build();
     }
 
-    @PostMapping()
-    public ResponseEntity<?> addAds(@RequestBody CreateAds createAds) {
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> addAds(@RequestPart CreateAds createAds, @RequestPart MultipartFile image) {
         return ResponseEntity.status(HttpStatus.valueOf(200)).build();
     }
 
@@ -39,12 +40,12 @@ public class AdsController {
     }
 
     @GetMapping("/{me}")
-    public ResponseEntity<?> getAdsUser(/*Не Знаю!!!*/){
+    public ResponseEntity<?> getAdsUser(){
         return ResponseEntity.status(HttpStatus.valueOf(200)).build();
     }
 
-    @PatchMapping("/{id}/{image}")
-    public ResponseEntity<?> updateImageUser(@PathVariable Integer id, @RequestParam String image){
+    @PatchMapping(value = "/{id}/{image}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updateImageUser(@PathVariable Integer id, @RequestPart MultipartFile image){
         return ResponseEntity.status(HttpStatus.valueOf(200)).build();
     }
 }
