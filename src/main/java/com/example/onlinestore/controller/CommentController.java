@@ -1,8 +1,10 @@
 package com.example.onlinestore.controller;
 
+import com.example.onlinestore.dto.Comment;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,8 +18,8 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.valueOf(200)).build();
     }
 
-    @PostMapping("/{id}/comments")
-    public ResponseEntity<?> addComments(@PathVariable Integer id) {
+    @PostMapping(value = "/{id}/comments", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> addComments(@PathVariable Integer id, @RequestBody Comment comment) {
         return ResponseEntity.status(HttpStatus.valueOf(200)).build();
     }
 
@@ -26,7 +28,7 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.valueOf(200)).build();}
 
     @PatchMapping("/{adId}/comments/{commentId}")
-    public ResponseEntity<?> updateComments(@PathVariable Integer adId, @PathVariable Integer commentId){
+    public ResponseEntity<?> updateComments(@PathVariable Integer adId, @PathVariable Integer commentId, @RequestBody Comment comment){
         return ResponseEntity.status(HttpStatus.valueOf(200)).build();
     }
 }
