@@ -20,7 +20,7 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<?> getUser(/*Не знаю!!!*/) {
+    public ResponseEntity<?> getUser() {
         return ResponseEntity.status(HttpStatus.valueOf(200)).build();
     }
 
@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateUserImage(@RequestPart String image) {
+    public ResponseEntity<?> updateUserImage(@RequestPart MultipartFile image) {
         return ResponseEntity.status(HttpStatus.valueOf(200)).build();
     }
 }
