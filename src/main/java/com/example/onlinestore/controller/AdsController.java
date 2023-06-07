@@ -1,6 +1,8 @@
 package com.example.onlinestore.controller;
 
 import com.example.onlinestore.dto.CreateAds;
+import com.example.onlinestore.mapper.AdsMapper;
+import com.example.onlinestore.repository.AdsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("ads")
 @RequiredArgsConstructor
 public class AdsController {
+    private AdsMapper adsMapper;
+    private AdsRepository adsRepository;
     @GetMapping()
     public ResponseEntity<?> getAllAds() {
         return ResponseEntity.status(HttpStatus.valueOf(200)).build();

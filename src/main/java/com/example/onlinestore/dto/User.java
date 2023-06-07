@@ -9,6 +9,6 @@ public class User {
     public String firstName;
     public String lastName;
     public String phone;
-    private String image;
+    private String image;//ссылка
 
 }

@@ -1,6 +1,8 @@
 package com.example.onlinestore.controller;
 
 import com.example.onlinestore.dto.Comment;
+import com.example.onlinestore.mapper.CommentMapper;
+import com.example.onlinestore.repository.CommentRepository;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("ads")
 @RequiredArgsConstructor
 public class CommentController {
+    private CommentMapper commentMapper;
+    private CommentRepository commentRepository;
     @GetMapping("/{id}/comments")
     public ResponseEntity<?> getComments(@PathVariable Integer id) {
         return ResponseEntity.status(HttpStatus.valueOf(200)).build();

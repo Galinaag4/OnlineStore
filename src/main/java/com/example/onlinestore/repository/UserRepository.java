@@ -6,4 +6,5 @@ import com.example.onlinestore.model.UserModel;
 
 @Repository
 public interface UserRepository extends JpaRepository <UserModel, Long>{
+
 }

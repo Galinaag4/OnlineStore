@@ -1,33 +1,31 @@
 package com.example.onlinestore.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
+
 @Entity
 @ToString
+@Getter
+@Setter
 @EqualsAndHashCode
+@Data
+@Table(name = "ads")
 public class AdsModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    //private UserModel userModel;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserModel userModel;
     private String description;
     private String image;
     private Integer price;
     private String title;
+    @OneToMany(mappedBy = "ads", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommentModel> commentModels;
 
-    public AdsModel(Long id /*UserModel userModel*/, String description, String image, Integer price, String title) {
-        this.id = id;
-        //this.userModel = userModel;
-        this.description = description;
-        this.image = image;
-        this.price = price;
-        this.title = title;
-    }
 
     public AdsModel() {
 
