@@ -5,25 +5,26 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "image")
-@EqualsAndHashCode
-@Getter
-@Setter
-@ToString
 public class ImageModel {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    @Column(name = "path")
+    private String path;
 
-    @Lob
-    @Type(type = "binary")
-    private byte[] image;
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    private AdsModel adsModel;
 
-   private String filePath;
 
-    private String mediaType;
 
 
 }

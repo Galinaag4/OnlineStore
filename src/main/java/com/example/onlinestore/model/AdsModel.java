@@ -1,33 +1,35 @@
 package com.example.onlinestore.model;
 
+import com.example.onlinestore.dto.Comment;
+import com.example.onlinestore.dto.User;
 import lombok.*;
 
 import javax.persistence.*;
+import java.awt.*;
 import java.util.List;
 
 @Entity
-@ToString
-@Getter
-@Setter
-@EqualsAndHashCode
 @Data
 @Table(name = "ads")
 public class AdsModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @ManyToOne
+    private Integer id;
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private UserModel userModel;
-    private String description;
-    private String image;
-    private Integer price;
+    private UserModel author;
+
+    @Column(name = "title")
     private String title;
-    @OneToMany(mappedBy = "ads", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CommentModel> commentModels;
 
+    @Column(name = "price")
+    private int price;
 
-    public AdsModel() {
+    @Column(name = "description")
+    private String description;
 
-    }
+    @ToString.Exclude
+    @OneToMany(mappedBy = "ads", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<Image> images;
 }

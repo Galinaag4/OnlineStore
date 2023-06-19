@@ -1,42 +1,30 @@
 package com.example.onlinestore.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@EqualsAndHashCode
-@Getter
-@Setter
-@ToString
-@Table(name = "comment")
+@Data
+@Table(name = "comments")
 public class CommentModel {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private UserModel userModel;
-    @ManyToOne
-    @JoinColumn(name = "ads_id")
-    private AdsModel ads;
+    @Column(name = "id")
+    private Integer id;
+
+    @Column(name = "ads_id")
+    private Integer adsId;
+
+    @Column(name = "author_id")
+    private Integer author;
+
+    @Column(name = "created_at")
+    private String createdAt;
+
+    @Column(name = "text")
     private String text;
-    private LocalDateTime createdAt;
-
-    public CommentModel(Long id, UserModel userModel, AdsModel ads, String text, LocalDateTime createdAt) {
-        this.id = id;
-        this.userModel = userModel;
-        this.ads = ads;
-        this.text = text;
-        this.createdAt = createdAt;
-    }
-
-    public CommentModel() {
-
-    }
 
 }

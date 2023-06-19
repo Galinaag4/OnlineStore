@@ -1,45 +1,42 @@
 package com.example.onlinestore.model;
 
 
-import lombok.*;
-import com.example.onlinestore.dto.Role;
 
+import lombok.*;
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
-@ToString
-@EqualsAndHashCode
-@Getter
-@Setter
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "users")
 public class UserModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String password;
+    @Column(name = "user_model_id")
+    private Integer id;
+
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "first_name")
     private String firstName;
+
+    @Column(name = "last_name")
     private String lastName;
+
+    @Column(name = "phone")
     private String phone;
-    private Role role;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "author",fetch = FetchType.LAZY)
+    private Set<AdsModel> adsModels;
+
+    @Column(name = "reg_date")
+    private String regDate;
+    @Column(name = "city")
+    private String city;
+
     private String image;
-
-    public UserModel(Long id, String password, String firstName, String lastName, String phone, Role role, String image) {
-        this.id = id;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phone = phone;
-        this.role = role;
-        this.image = image;
-    }
-
-    public UserModel() {
-
-    }
-
-
-
-
-
 }
