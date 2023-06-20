@@ -14,7 +14,7 @@ import java.util.Set;
 public class UserModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_model_id")
+    @Column(name = "id")
     private Integer id;
 
     @Column(name = "email")
@@ -37,6 +37,6 @@ public class UserModel {
     private String regDate;
     @Column(name = "city")
     private String city;
-
+    @Column(name = "image")
     private String image;
 }

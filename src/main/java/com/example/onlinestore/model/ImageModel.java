@@ -19,6 +19,10 @@ public class ImageModel {
     private Integer id;
     @Column(name = "path")
     private String path;
+    @Lob
+    @Type(type = "binary")
+    private byte[] image;
+    private String mediaType;
 
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
