@@ -1,36 +1,30 @@
 package com.example.onlinestore.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@EqualsAndHashCode
-@ToString
+@Data
+@Table(name = "comments")
 public class CommentModel {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    //private UserModel userModel;
-    private Integer pk;//? надо его тут создавать или нет?
+    @Column(name = "id")
+    private Integer id;
+
+    @Column(name = "ads_id")
+    private Integer adsId;
+
+    @Column(name = "author_id")
+    private Integer author;
+
+    @Column(name = "created_at")
+    private String createdAt;
+
+    @Column(name = "text")
     private String text;
-    private LocalDateTime createdAt;
-
-    public CommentModel(Long id /*UserModel userModel*/, Integer pk, String text, LocalDateTime createdAt) {
-        this.id = id;
-        //this.userModel = userModel;
-        this.pk = pk;
-        this.text = text;
-        this.createdAt = createdAt;
-    }
-
-    public CommentModel() {
-
-    }
 
 }

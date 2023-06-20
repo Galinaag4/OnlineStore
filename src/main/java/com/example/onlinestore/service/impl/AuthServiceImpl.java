@@ -1,8 +1,11 @@
 package com.example.onlinestore.service.impl;
 
+import com.example.onlinestore.dto.NewPassword;
+import com.example.onlinestore.repository.UserRepository;
 import com.example.onlinestore.service.AuthService;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
@@ -15,10 +18,12 @@ public class AuthServiceImpl implements AuthService {
   private final UserDetailsManager manager;
 
   private final PasswordEncoder encoder;
+  private final UserRepository userRepository;
 
-  public AuthServiceImpl(UserDetailsManager manager, PasswordEncoder passwordEncoder) {
+  public AuthServiceImpl(UserDetailsManager manager, UserRepository userRepository) {
     this.manager = manager;
-    this.encoder = passwordEncoder;
+    this.userRepository = userRepository;
+    this.encoder = new BCryptPasswordEncoder();
   }
 
   @Override
@@ -44,4 +49,16 @@ public class AuthServiceImpl implements AuthService {
             .build());
     return true;
   }
-}
+
+  @Override
+  public boolean changePassword(NewPassword newPassword, String name) {
+    if (login(name, newPassword.getCurrentPassword())) {
+      BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+      manager.changePassword(
+              newPassword.getCurrentPassword(),
+              "{bcrypt}" + encoder.encode(newPassword.getNewPassword()));
+      return true;
+    }
+    return false;
+  }
+  }
