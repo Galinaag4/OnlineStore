@@ -5,6 +5,7 @@ import com.example.onlinestore.dto.CreateAds;
 import com.example.onlinestore.dto.FullAds;
 import com.example.onlinestore.model.AdsModel;
 import com.example.onlinestore.model.ImageModel;
+import com.example.onlinestore.model.UserModel;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
@@ -15,6 +16,7 @@ import java.util.List;
 @Mapper(componentModel = "spring",unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface AdsMapper {
     AdsMapper INSTANCE = Mappers.getMapper(AdsMapper.class);
+
 
     @Mapping(target = "pk", source = "id")
     @Mapping(target = "author", source = "author.id")
@@ -34,7 +36,7 @@ public interface AdsMapper {
             nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
     AdsModel createAdsModelToAdsModel(CreateAds createAds);
     default String mappedImages(AdsModel adsModel) {
-        List<Image> image= adsModel.getImages();
+        List<ImageModel> image= adsModel.getImages();
         if (image == null||image.isEmpty()) {
             return null;
         }

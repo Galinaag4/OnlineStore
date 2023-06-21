@@ -13,6 +13,10 @@ import static javax.persistence.GenerationType.IDENTITY;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "image")
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
 public class ImageModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +32,43 @@ public class ImageModel {
     @ManyToOne(fetch = FetchType.LAZY)
     private AdsModel adsModel;
 
+    public Integer getId() {
+        return id;
+    }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
+    public String getPath() {
+        return path;
+    }
 
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    public String getMediaType() {
+        return mediaType;
+    }
+
+    public void setMediaType(String mediaType) {
+        this.mediaType = mediaType;
+    }
+
+    public AdsModel getAdsModel() {
+        return adsModel;
+    }
+
+    public void setAdsModel(AdsModel adsModel) {
+        this.adsModel = adsModel;
+    }
 }
