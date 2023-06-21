@@ -18,7 +18,9 @@ CREATE TABLE IF NOT EXISTS users
     last_name    varchar(40),
     phone        varchar(12),
     image     BIGINT,
-    reg_date        VARCHAR(50)
+    reg_date        VARCHAR(50),
+    role         varchar
+
 );
 
 CREATE TABLE IF NOT EXISTS ads
