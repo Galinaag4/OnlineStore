@@ -31,11 +31,9 @@ import javax.validation.constraints.NotNull;
 @RequiredArgsConstructor
 @Tag(name = "Комментарии", description = "Методы работы с комментариями.")
 public class CommentController {
-    private final AdsService adsService;
-    private final ImageService imageService;
+
     private final CommentService commentService;
-    private CommentMapper commentMapper;
-    private CommentRepository commentRepository;
+
 
     @Operation(
             operationId = "getComments",

@@ -1,11 +1,8 @@
 package com.example.onlinestore.model;
 
-import com.example.onlinestore.dto.Comment;
-import com.example.onlinestore.dto.User;
 import lombok.*;
 
 import javax.persistence.*;
-import java.awt.*;
 import java.util.List;
 
 @Entity
@@ -34,8 +31,8 @@ public class AdsModel {
     private String description;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "ads", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private List<ImageModel> images;
+    @OneToOne(mappedBy = "ads", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private ImageModel image;
 
     public Integer getId() {
         return id;
@@ -77,11 +74,11 @@ public class AdsModel {
         this.description = description;
     }
 
-    public List<ImageModel> getImages() {
-        return images;
+    public ImageModel getImage() {
+        return image;
     }
 
-    public void setImages(List<ImageModel> images) {
-        this.images = images;
+    public void setImage(ImageModel image) {
+        this.image = image;
     }
 }

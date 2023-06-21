@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-@Slf4j
+/*@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -59,4 +59,4 @@ public class CommentServiceImpl implements CommentService {
         return CommentMapper.INSTANCE.commentModelToComment(commentRepository.save(commentModel));
     }
 
-}
+}*/

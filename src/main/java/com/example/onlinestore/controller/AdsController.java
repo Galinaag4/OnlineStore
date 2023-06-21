@@ -33,7 +33,7 @@ import java.io.IOException;
 @Tag(name = "Объявления", description = "Методы работы с объявлениями.")
 public class AdsController {
     private final AdsService adsService;
-    private final ImageService imageService;
+
 
     @Operation(
             operationId = "getAllAds",
@@ -65,7 +65,6 @@ public class AdsController {
             }
     )
     @PostMapping()
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<Ads> addAds(@NotNull Authentication authentication,
                                          @RequestPart("properties") @Valid @javax.validation.constraints.NotNull @NotBlank CreateAds properties,
                                          @RequestPart("image") MultipartFile image
@@ -84,7 +83,6 @@ public class AdsController {
             }
     )
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<FullAds> getAdsId(@PathVariable("id") Long id) {
         return ResponseEntity.ok(adsService.getFullAdsModel(id));
     }
@@ -100,7 +98,6 @@ public class AdsController {
             }
     )
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteAds(Authentication authentication, @PathVariable("id") Integer id) {
         adsService.deleteAds(id, authentication);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -119,7 +116,6 @@ public class AdsController {
             }
     )
     @PatchMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<Ads> updateAdsId(@PathVariable("id") Integer id,
                                             @Valid @RequestBody CreateAds createAds,
                                             Authentication authentication) {
@@ -127,7 +123,6 @@ public class AdsController {
         }
 
     @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> updateImageUser(@PathVariable Integer id, @RequestPart MultipartFile image){
         return ResponseEntity.status(HttpStatus.valueOf(200)).build();
 }

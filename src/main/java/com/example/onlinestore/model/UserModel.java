@@ -44,10 +44,7 @@ public class UserModel {
     @OneToMany(mappedBy = "author",fetch = FetchType.LAZY)
     private Set<AdsModel> adsModels;
 
-    @Column(name = "reg_date")
-    private String regDate;
-    @Column(name = "city")
-    private String city;
+
     @Column(name = "image")
     private String image;
 
@@ -123,21 +120,6 @@ public class UserModel {
         this.adsModels = adsModels;
     }
 
-    public String getRegDate() {
-        return regDate;
-    }
-
-    public void setRegDate(String regDate) {
-        this.regDate = regDate;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
 
     public String getImage() {
         return image;

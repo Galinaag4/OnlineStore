@@ -43,24 +43,21 @@ public class AdsServiceImpl implements AdsService {
             adsModels = adsRepository.findAll();
         }
 
-        return AdsMapper.INSTANCE.adsModelCollectionToAds(adsModels);
+        return null;
 
     }
 
     @Override
     public Ads save(CreateAds adsModel, Authentication authentication, MultipartFile image) throws IOException {
 
-        AdsModel newAdsModel = AdsMapper.INSTANCE.createAdsModelToAdsModel(adsModel);
+        /*AdsModel newAdsModel = AdsMapper.INSTANCE.createAdsModelToAdsModel(adsModel);
         newAdsModel.setAuthor(userRepository.findUserByEmail(authentication.getName()).orElseThrow(NotFoundUserException::new));
         log.info("Save ads: " + newAdsModel);
         adsRepository.save(newAdsModel);
 
         imageService.updateAdsImage(newAdsModel.getId(),image,authentication);
-        log.info("Photo have been saved");
-
-        return AdsMapper
-                .INSTANCE
-                .adsModelToAds(newAdsModel);
+        log.info("Photo have been saved");*/
+        return null;
     }
 
     @Override
@@ -71,7 +68,7 @@ public class AdsServiceImpl implements AdsService {
     @Override
     public FullAds getFullAdsModel(Long adsId) {
         AdsModel adsModel = adsRepository.findById(adsId).orElseThrow(AdsNotFoundException::new);
-        return AdsMapper.INSTANCE.toFullAds(adsModel);
+        return null;
     }
 
 
@@ -79,7 +76,7 @@ public class AdsServiceImpl implements AdsService {
     public Collection<Ads> getAdsModelByUser(String email) {
         int authorId = userRepository.getUserModelId(email);
         Collection<AdsModel> adsModels = adsRepository.findByAuthorId(authorId);
-        return AdsMapper.INSTANCE.adsModelCollectionToAds(adsModels);
+        return null;
     }
 
 }

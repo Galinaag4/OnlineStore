@@ -10,7 +10,7 @@ import java.io.IOException;
 
 @Mapper(componentModel = "spring",unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserMapper {
-    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
+
 
     @Mapping(target = "id", source = "id")
     @Mapping(target = "image", expression = "java(getImage(profileUser))")

@@ -49,7 +49,6 @@ public class UserController {
             }
     )
     @PostMapping("/set_password")
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<NewPassword> setPassword(@RequestBody NewPassword newPassword, Authentication authentication) {
 
         if (authService.changePassword(newPassword, authentication.getName())) {
@@ -72,7 +71,6 @@ public class UserController {
             }
     )
     @GetMapping("/me")
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<User> getUser(Authentication authentication) throws IOException {
         return ResponseEntity.ok(userService.getUser(authentication.getName()));
     }
@@ -92,7 +90,6 @@ public class UserController {
             }
     )
     @PatchMapping("/me")
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<User> updateUser(@RequestBody User user, Authentication authentication) throws IOException {
         return ResponseEntity.ok(userService.update(user, authentication.getName()));
     }
@@ -107,7 +104,6 @@ public class UserController {
             }
     )
     @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> updateUserImage(@RequestParam MultipartFile image, Authentication authentication) throws IOException {
         userService.updateAvatar(image, authentication.getName());
         return ResponseEntity.status(200).build();
