@@ -2,6 +2,7 @@ package com.example.onlinestore.model;
 
 
 
+import com.example.onlinestore.dto.Role;
 import lombok.*;
 import javax.persistence.*;
 import java.util.Set;
@@ -16,6 +17,8 @@ public class UserModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
+    @Column(name = "userName")
+    private String username;
 
     @Column(name = "email")
     private String email;
@@ -28,6 +31,10 @@ public class UserModel {
 
     @Column(name = "phone")
     private String phone;
+    @Column(name = "role")
+    private Role role;
+    @Column(name = "password")
+    private String password;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "author",fetch = FetchType.LAZY)

@@ -11,8 +11,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Configuration
+@CrossOrigin(origins = {"http://localhost:3000"})
 public class WebSecurityConfig {
 
   private static final String[] AUTH_WHITELIST = {
@@ -43,7 +45,7 @@ public class WebSecurityConfig {
             .authorizeHttpRequests((authz) ->
                     authz
                             .mvcMatchers(AUTH_WHITELIST).permitAll()
-                            //.mvcMatchers("/ads/**", "/users/**").authenticated()
+                            .mvcMatchers("/ads/**", "/users/**").authenticated()
 
             )
             .cors().and()
