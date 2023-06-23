@@ -1,11 +1,8 @@
 package com.example.onlinestore.model;
 
-import com.example.onlinestore.dto.Comment;
-import com.example.onlinestore.dto.User;
 import lombok.*;
 
 import javax.persistence.*;
-import java.awt.*;
 import java.util.List;
 
 @Entity
@@ -22,7 +19,7 @@ public class AdsModel {
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private UserModel author;
+    private UserModel userModel;
 
     @Column(name = "title")
     private String title;
@@ -34,8 +31,8 @@ public class AdsModel {
     private String description;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "ads", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private List<ImageModel> images;
+    @OneToOne(mappedBy = "ads", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private ImageModel imageModel;
 
     public Integer getId() {
         return id;
@@ -45,13 +42,7 @@ public class AdsModel {
         this.id = id;
     }
 
-    public UserModel getAuthor() {
-        return author;
-    }
 
-    public void setAuthor(UserModel author) {
-        this.author = author;
-    }
 
     public String getTitle() {
         return title;
@@ -77,11 +68,19 @@ public class AdsModel {
         this.description = description;
     }
 
-    public List<ImageModel> getImages() {
-        return images;
+    public UserModel getUserModel() {
+        return userModel;
     }
 
-    public void setImages(List<ImageModel> images) {
-        this.images = images;
+    public void setUserModel(UserModel userModel) {
+        this.userModel = userModel;
+    }
+
+    public ImageModel getImageModel() {
+        return imageModel;
+    }
+
+    public void setImageModel(ImageModel imageModel) {
+        this.imageModel = imageModel;
     }
 }

@@ -1,6 +1,8 @@
 package com.example.onlinestore.service.impl;
 
 import com.example.onlinestore.dto.Comment;
+import com.example.onlinestore.dto.CreateComment;
+import com.example.onlinestore.dto.ResponseWrapperComment;
 import com.example.onlinestore.exception.CommentNotFoundException;
 import com.example.onlinestore.mapper.CommentMapper;
 import com.example.onlinestore.model.CommentModel;
@@ -11,52 +13,70 @@ import com.example.onlinestore.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Service
 @Transactional
-@RequiredArgsConstructor
-public class CommentServiceImpl implements CommentService {
-    private final CommentRepository commentRepository;
-    private final AdsRepository adsRepository;
-    private final UserRepository userRepository;
-    private final ImageServiceImpl imageService;
+public class CommentServiceImpl {
+    public final CommentMapper commentMapper;
+    public final CommentRepository commentRepository;
+    public final UserRepository userRepository;
+    public final UserServiceImpl userServiceImpl;
+    public final AdsRepository adsRepository;
 
-    @Override
-    public Comment addComments(Integer adsId, Comment adsComment, @NotNull Authentication authentication) {
+    public CommentServiceImpl(CommentMapper commentMapper, CommentRepository commentRepository, UserRepository userRepository, UserServiceImpl userServiceImpl, AdsRepository adsRepository) {
+        this.commentMapper = commentMapper;
+        this.commentRepository = commentRepository;
+        this.userRepository = userRepository;
+        this.userServiceImpl = userServiceImpl;
+        this.adsRepository = adsRepository;
+    }
 
-        Integer userId = userRepository.getUserProfileId(authentication.getName());
+    @Transactional(readOnly = true)
+    public ResponseWrapperComment getComments(Integer id) {
+        ResponseWrapperComment responseWrapperComment = new ResponseWrapperComment();
+        List<CommentModel> commentList = commentRepository.findAllByAdsModelId(id);
+        responseWrapperComment.setResults(commentMapper.commentListToCommentDtoList(commentList));
+        responseWrapperComment.setCount(commentList.size());
+        return responseWrapperComment;
+    }
 
-        CommentModel commentModel = CommentMapper.INSTANCE.commentToCommentModel(adsComment);
-        commentModel.setAdsId(adsId);
-        commentModel.setAuthor(userId);
-        commentModel.setCreatedAt(LocalDateTime.now().toString());
-
+    @Transactional
+    public Comment addComment(Integer id, CreateComment createComment) {
+        CommentModel commentModel = commentMapper.toCommentModel(createComment);
+        commentModel.setAdsModel(adsRepository.findById(id).orElse(null));
+        commentModel.setUserModel(userRepository.findByUsername(userServiceImpl.getCurrentUsername()).orElseThrow(() -> new UsernameNotFoundException("User not found")));
+        commentModel.setCreatedAt(System.currentTimeMillis());
         commentRepository.save(commentModel);
-        return CommentMapper.INSTANCE.commentModelToComment(commentModel);
+        return commentMapper.toComment(commentModel);
     }
 
-    @Override
-    public Comment getComments(Integer adsId, Integer commentId) {
-        CommentModel commentModel = commentRepository.getByAdsIdAndId(adsId, commentId).orElseThrow(CommentNotFoundException::new);
-        return CommentMapper.INSTANCE.commentModelToComment(commentModel);
+    @Transactional
+    public void deleteComment(int commentId) {
+        commentRepository.deleteById(commentId);
     }
 
-    @Override
-    public void deleteComments(Integer adsId, Integer commentId) {
-        commentRepository.deleteByAdsIdAndId(adsId, commentId);
+    @Transactional
+    public Comment updateComment(int commentId, Comment comment) {
+        CommentModel updatedComment = commentRepository.findById(commentId).orElseThrow();
+        updatedComment.setText(comment.getText());
+        commentRepository.save(updatedComment);
+        return commentMapper.toComment(updatedComment);
     }
 
-    @Override
-    public Comment updateComments(Integer adsId, Integer commentId, @NotNull Comment comment) {
-        CommentModel commentModel = commentRepository.getByAdsIdAndId(adsId, commentId).orElseThrow(CommentNotFoundException::new);
-        commentModel.setText(comment.getText());
-        return CommentMapper.INSTANCE.commentModelToComment(commentRepository.save(commentModel));
+    @Transactional
+    public void deleteCommentsByAdId(Integer adsId) {
+        commentRepository.deleteCommentsByAdsModelId(adsId);
+
     }
+
+
 
 }

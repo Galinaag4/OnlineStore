@@ -6,11 +6,8 @@ import java.util.Collection;
 
 @Data
 public class ResponseWrapperComment<C> {
-    private final int count;
-    private final Collection<C> results;
+    private  int count;
+    private  Collection<C> results;
 
-    public ResponseWrapperComment(Comment results) {
-        this.count = results.size();
-        this.results = results;
-    }
+
 }

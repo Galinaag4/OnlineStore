@@ -12,7 +12,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "image")
+@Table(name = "images")
 @Getter
 @Setter
 @EqualsAndHashCode
@@ -21,15 +21,13 @@ public class ImageModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name = "path")
-    private String path;
     @Lob
-    @Type(type = "binary")
     private byte[] image;
     private String mediaType;
+    private Long fileSize;
 
     @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     private AdsModel adsModel;
 
     public Integer getId() {
@@ -40,13 +38,7 @@ public class ImageModel {
         this.id = id;
     }
 
-    public String getPath() {
-        return path;
-    }
 
-    public void setPath(String path) {
-        this.path = path;
-    }
 
     public byte[] getImage() {
         return image;
@@ -70,5 +62,13 @@ public class ImageModel {
 
     public void setAdsModel(AdsModel adsModel) {
         this.adsModel = adsModel;
+    }
+
+    public Long getFileSize() {
+        return fileSize;
+    }
+
+    public void setFileSize(Long fileSize) {
+        this.fileSize = fileSize;
     }
 }

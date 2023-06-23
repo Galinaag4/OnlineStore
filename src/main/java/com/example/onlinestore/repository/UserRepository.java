@@ -7,10 +7,9 @@ import com.example.onlinestore.model.UserModel;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository <UserModel, Long>{
+public interface UserRepository extends JpaRepository <UserModel, Integer>{
     Optional<UserModel> findByUsername(String username);
-    Optional<UserModel> findUserByEmail(String email);
-    Integer getUserModelId(String name);
+    Integer getImageById(Integer userModelId);
 
 
 }
