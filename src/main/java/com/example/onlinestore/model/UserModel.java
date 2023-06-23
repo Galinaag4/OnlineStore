@@ -4,7 +4,13 @@ package com.example.onlinestore.model;
 
 import com.example.onlinestore.dto.Role;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Set;
 
 @Entity
@@ -16,16 +22,13 @@ import java.util.Set;
 @Setter
 @EqualsAndHashCode
 @ToString
-public class UserModel {
+public class UserModel implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
     @Column(name = "userName")
     private String username;
-
-    @Column(name = "email")
-    private String email;
 
     @Column(name = "first_name")
     private String firstName;
@@ -35,18 +38,20 @@ public class UserModel {
 
     @Column(name = "phone")
     private String phone;
+    @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role;
     @Column(name = "password")
     private String password;
+    @OneToOne
+    private ImageModel imageModel;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "author",fetch = FetchType.LAZY)
     private Set<AdsModel> adsModels;
 
 
-    @Column(name = "image")
-    private String image;
+
 
     public Integer getId() {
         return id;
@@ -60,16 +65,28 @@ public class UserModel {
         return username;
     }
 
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getFirstName() {
@@ -104,6 +121,13 @@ public class UserModel {
         this.role = role;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(this.role.toString()));
+        return authorities;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -121,11 +145,11 @@ public class UserModel {
     }
 
 
-    public String getImage() {
-        return image;
+    public ImageModel getImageModel() {
+        return imageModel;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImageModel(ImageModel imageModel) {
+        this.imageModel = imageModel;
     }
 }

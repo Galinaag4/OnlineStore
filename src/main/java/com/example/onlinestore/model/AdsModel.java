@@ -19,7 +19,7 @@ public class AdsModel {
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private UserModel author;
+    private UserModel userModel;
 
     @Column(name = "title")
     private String title;
@@ -32,7 +32,7 @@ public class AdsModel {
 
     @ToString.Exclude
     @OneToOne(mappedBy = "ads", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private ImageModel image;
+    private ImageModel imageModel;
 
     public Integer getId() {
         return id;
@@ -42,13 +42,7 @@ public class AdsModel {
         this.id = id;
     }
 
-    public UserModel getAuthor() {
-        return author;
-    }
 
-    public void setAuthor(UserModel author) {
-        this.author = author;
-    }
 
     public String getTitle() {
         return title;
@@ -74,11 +68,19 @@ public class AdsModel {
         this.description = description;
     }
 
-    public ImageModel getImage() {
-        return image;
+    public UserModel getUserModel() {
+        return userModel;
     }
 
-    public void setImage(ImageModel image) {
-        this.image = image;
+    public void setUserModel(UserModel userModel) {
+        this.userModel = userModel;
+    }
+
+    public ImageModel getImageModel() {
+        return imageModel;
+    }
+
+    public void setImageModel(ImageModel imageModel) {
+        this.imageModel = imageModel;
     }
 }

@@ -19,17 +19,15 @@ public class CommentModel {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "ads_id")
-    private Integer adsId;
-
-    @Column(name = "author_id")
-    private Integer author;
-
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    private Long createdAt;
 
     @Column(name = "text")
     private String text;
+    @ManyToOne
+    private UserModel userModel;
+    @ManyToOne
+    private AdsModel adsModel;
 
     public Integer getId() {
         return id;
@@ -39,27 +37,12 @@ public class CommentModel {
         this.id = id;
     }
 
-    public Integer getAdsId() {
-        return adsId;
-    }
 
-    public void setAdsId(Integer adsId) {
-        this.adsId = adsId;
-    }
-
-    public Integer getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(Integer author) {
-        this.author = author;
-    }
-
-    public LocalDateTime getCreatedAt() {
+    public Long getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -69,5 +52,21 @@ public class CommentModel {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public UserModel getUserModel() {
+        return userModel;
+    }
+
+    public void setUserModel(UserModel userModel) {
+        this.userModel = userModel;
+    }
+
+    public AdsModel getAdsModel() {
+        return adsModel;
+    }
+
+    public void setAdsModel(AdsModel adsModel) {
+        this.adsModel = adsModel;
     }
 }
