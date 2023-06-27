@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserDetailsManager {
         image.setMediaType(file.getContentType());
         image.setImage(file.getBytes());
         imageRepository.save(image);
-        user.setImage(String.valueOf(image));
+        user.setImageModel((image));
 
     }
 

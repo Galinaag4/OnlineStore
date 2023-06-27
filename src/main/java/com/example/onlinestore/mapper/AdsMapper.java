@@ -11,33 +11,26 @@ import org.springframework.stereotype.Component;
 import java.util.Collection;
 import java.util.List;
 @Component
-@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+@Mapper(componentModel = "spring")
 public interface AdsMapper {
-
-
-
     AdsModel toAdsModel(CreateAds createAds);
-
-    @Mapping(target = "pk", source = "id")
+    @Mapping(source = "id", target = "pk")
     @Mapping(target = "author", source = "userModel.id")
-    @Mapping(target = "image", expression="java(getImage(ad))")
+    @Mapping(target = "image", expression="java(getImageModel(adsModel))")
     Ads toAds(AdsModel adsModel);
-
     @Mapping(target = "pk", source = "id")
     @Mapping(target = "authorFirstName", source = "userModel.firstName")
     @Mapping(target = "authorLastName", source = "userModel.lastName")
-    @Mapping(target = "email", source = "userModel.username")
+    @Mapping(target = "email", source = "userModel.email")
     @Mapping(target = "phone", source = "userModel.phone")
-    @Mapping(target = "image", expression="java(getImageModel(ads))")
+    @Mapping(target = "image", expression="java(getImageModel(adsModel))")
     FullAds toFullAdsDto(AdsModel adsModel);
-
-    default String getImage(AdsModel adsModel) {
+    default String getImageModel(AdsModel adsModel) {
         if (adsModel.getImageModel() == null) {
             return null;
         }
         return "/ads/image/" + adsModel.getId() + "/from-db";
     }
-
     List<Ads> adListToAdsDtoList(List<AdsModel> adList);
 
 
