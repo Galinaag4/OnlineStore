@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 @Component
-@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+@Mapper(componentModel = "spring")
 public interface UserMapper {
 
 
@@ -19,7 +19,7 @@ public interface UserMapper {
     @Mapping(target = "image", expression = "java(getImageModel(userModel))")
     void toUserDto(@MappingTarget User user, UserModel userModel);
 
-    default String getImage(UserModel userModel) {
+    default String getImageModel(UserModel userModel) {
         if (userModel.getImageModel() == null) {
             return null;
         }
