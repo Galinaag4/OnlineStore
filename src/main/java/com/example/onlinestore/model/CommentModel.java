@@ -1,6 +1,7 @@
 package com.example.onlinestore.model;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -19,15 +20,20 @@ public class CommentModel {
     @Column(name = "id")
     private Integer id;
 
+    @Column(name = "author")
     private Integer author;
     @Column(name = "created_at")
-    private Long createdAt;
+    private Integer createdAt;
     @Column(name = "text")
     private String text;
     @ManyToOne
     private UserModel userModel;
     @ManyToOne
     private AdsModel adsModel;
+
+    public CommentModel() {
+
+    }
 
     public Integer getId() {
         return id;
@@ -38,11 +44,11 @@ public class CommentModel {
     }
 
 
-    public Long getCreatedAt() {
+    public Integer getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(long createdAt) {
+    public void setCreatedAt(Integer createdAt) {
         this.createdAt = createdAt;
     }
 

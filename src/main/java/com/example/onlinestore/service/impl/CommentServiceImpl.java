@@ -53,18 +53,18 @@ public class CommentServiceImpl {
         CommentModel commentModel = commentMapper.toCommentModel(createComment);
         commentModel.setAdsModel(adsRepository.findById(id).orElse(null));
         commentModel.setUserModel(userRepository.findByUsername(userServiceImpl.getCurrentUsername()).orElseThrow(() -> new UsernameNotFoundException("User not found")));
-        commentModel.setCreatedAt(System.currentTimeMillis());
+        commentModel.setCreatedAt((int) System.currentTimeMillis());
         commentRepository.save(commentModel);
         return commentMapper.commentModelToComment(commentModel);
     }
 
     @Transactional
-    public void deleteComment(int commentId) {
+    public void deleteComment(Integer commentId) {
         commentRepository.deleteById(commentId);
     }
 
     @Transactional
-    public Comment updateComment(int commentId, Comment comment) {
+    public Comment updateComment(Integer commentId, Comment comment) {
         CommentModel updatedComment = commentRepository.findById(commentId).orElseThrow();
         updatedComment.setText(comment.getText());
         commentRepository.save(updatedComment);

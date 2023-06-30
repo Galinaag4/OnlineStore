@@ -2,6 +2,7 @@ package com.example.onlinestore.dto;
 
 import lombok.Data;
 
+
 @Data
 public class Comment {
     private Integer author;
