@@ -8,10 +8,10 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "ads")
-//@Getter
-//@Setter
-//@EqualsAndHashCode
-//@ToString
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
 public class AdsModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,8 +46,6 @@ public class AdsModel {
     public void setId(Integer id) {
         this.id = id;
     }
-
-
 
     public String getTitle() {
         return title;

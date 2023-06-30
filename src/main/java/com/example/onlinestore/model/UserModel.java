@@ -18,10 +18,10 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
-//@Getter
-//@Setter
-//@EqualsAndHashCode
-//@ToString
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
 public class UserModel implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
