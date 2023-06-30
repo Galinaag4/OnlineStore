@@ -16,8 +16,8 @@ public interface UserMapper {
     User toUser(RegisterReq registerReq);
 
     @Mapping(source = "username", target = "email")
-    @Mapping(target = "image", expression = "java(getImageModel(userModel))")
-    void toUserDto(@MappingTarget User user, UserModel userModel);
+    @Mapping(target = "image", expression = "java (getImageModel(userModel))")
+    void toUser (@MappingTarget User user, UserModel userModel);
 
     default String getImageModel(UserModel userModel) {
         if (userModel.getImageModel() == null) {

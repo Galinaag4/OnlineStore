@@ -55,7 +55,7 @@ public class CommentServiceImpl {
         commentModel.setUserModel(userRepository.findByUsername(userServiceImpl.getCurrentUsername()).orElseThrow(() -> new UsernameNotFoundException("User not found")));
         commentModel.setCreatedAt(System.currentTimeMillis());
         commentRepository.save(commentModel);
-        return commentMapper.toComment(commentModel);
+        return commentMapper.commentModelToComment(commentModel);
     }
 
     @Transactional
@@ -68,7 +68,7 @@ public class CommentServiceImpl {
         CommentModel updatedComment = commentRepository.findById(commentId).orElseThrow();
         updatedComment.setText(comment.getText());
         commentRepository.save(updatedComment);
-        return commentMapper.toComment(updatedComment);
+        return commentMapper.commentModelToComment(updatedComment);
     }
 
     @Transactional

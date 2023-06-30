@@ -14,14 +14,14 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface AdsMapper {
     AdsModel toAdsModel(CreateAds createAds);
-    @Mapping(source = "id", target = "pk")
+    @Mapping(target = "pk", source = "id")
     @Mapping(target = "author", source = "userModel.id")
     @Mapping(target = "image", expression="java(getImageModel(adsModel))")
-    Ads toAds(AdsModel adsModel);
+    Ads adsModelToAds (AdsModel adsModel);
     @Mapping(target = "pk", source = "id")
     @Mapping(target = "authorFirstName", source = "userModel.firstName")
     @Mapping(target = "authorLastName", source = "userModel.lastName")
-    @Mapping(target = "email", source = "userModel.email")
+    @Mapping(target = "email", source = "userModel.username")
     @Mapping(target = "phone", source = "userModel.phone")
     @Mapping(target = "image", expression="java(getImageModel(adsModel))")
     FullAds toFullAdsDto(AdsModel adsModel);
