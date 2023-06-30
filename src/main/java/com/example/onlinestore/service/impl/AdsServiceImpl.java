@@ -65,14 +65,14 @@ public class AdsServiceImpl{
         AdsModel adsModel = adsMapper.toAdsModel(properties);
         ImageModel imageModel = new ImageModel();
 
-        imageModel.setFileSize(file.getSize());
+//        imageModel.setFileSize(file.getSize());
         imageModel.setMediaType(file.getContentType());
         imageModel.setImage(file.getBytes());
         imageRepository.save(imageModel);
         adsModel.setImageModel(imageModel);
         adsModel.setUserModel(userRepository.findByUsername(userServiceImpl.getCurrentUsername()).orElseThrow(() -> new UsernameNotFoundException("User not found")));
         adsRepository.save(adsModel);
-        return adsMapper.toAds(adsModel);
+        return adsMapper.adsModelToAds(adsModel);
     }
 
     @Transactional
@@ -101,7 +101,7 @@ public class AdsServiceImpl{
     public void updateAdImage(Integer id, MultipartFile file) throws IOException {
         AdsModel adsModel = adsRepository.findById(id).orElseThrow();
         ImageModel imageModel = imageRepository.findById(adsModel.getId()).orElse(new ImageModel());
-        imageModel.setFileSize(file.getSize());
+//        imageModel.setFileSize(file.getSize());
         imageModel.setMediaType(file.getContentType());
         imageModel.setImage(file.getBytes());
         imageRepository.save(imageModel);
@@ -114,8 +114,9 @@ public class AdsServiceImpl{
         adsModel.setTitle(properties.getTitle());
         adsModel.setDescription(properties.getDescription());
         adsModel.setPrice(properties.getPrice());
+
         adsRepository.save(adsModel);
 
-        return adsMapper.toAds(adsModel);
+        return adsMapper.adsModelToAds(adsModel);
     }
 }

@@ -19,9 +19,9 @@ public class CommentModel {
     @Column(name = "id")
     private Integer id;
 
+    private Integer author;
     @Column(name = "created_at")
     private Long createdAt;
-
     @Column(name = "text")
     private String text;
     @ManyToOne

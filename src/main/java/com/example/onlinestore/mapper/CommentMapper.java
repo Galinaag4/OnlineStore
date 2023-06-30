@@ -12,14 +12,15 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface CommentMapper {
 
-
     CommentModel toCommentModel(CreateComment createComment);
 
     @Mapping(target = "pk", source = "id")
     @Mapping(target = "author", source = "userModel.id")
     @Mapping(target = "authorFirstName", source = "userModel.firstName")
     @Mapping(target = "authorImage", expression = "java(getImageModel(comment))")
-    Comment toComment(CommentModel commentModel);
+
+
+    Comment commentModelToComment (CommentModel commentModel);
 
     default String getImageModel(CommentModel commentModel) {
         if (commentModel.getUserModel().getImageModel() == null) {
@@ -27,6 +28,7 @@ public interface CommentMapper {
         }
         return "/users/image/" + commentModel.getUserModel().getId() + "/from-db";
     }
+
 
     List<Comment> commentListToCommentDtoList(List<CommentModel> commentList);
 }

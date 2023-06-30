@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserDetailsManager {
     public User getUser() {
         UserModel currentUser = userRepository.findByUsername(getCurrentUsername()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         User user = new User();
-        userMapper.toUserDto(user, currentUser);
+        userMapper.toUser(user, currentUser);
         return user;
     }
 
@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserDetailsManager {
     public void updateUserImage(MultipartFile file) throws IOException {
         UserModel user = userRepository.findByUsername(getCurrentUsername()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         ImageModel image = imageRepository.findById(user.getId()).orElse(new ImageModel());
-        image.setFileSize(file.getSize());
+//        image.setFileSize(file.getSize());
         image.setMediaType(file.getContentType());
         image.setImage(file.getBytes());
         imageRepository.save(image);
