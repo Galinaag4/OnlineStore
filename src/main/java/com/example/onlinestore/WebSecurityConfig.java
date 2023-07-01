@@ -4,6 +4,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,41 +15,33 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Configuration
-@CrossOrigin(origins = {"http://localhost:3000"})
 public class WebSecurityConfig {
 
   private static final String[] AUTH_WHITELIST = {
-    "/swagger-resources/**",
-    "/swagger-ui.html",
-    "/v3/api-docs",
-    "/webjars/**",
-    "/login",
-    "/register"
+          "/swagger-resources/**",
+          "/swagger-ui.html",
+          "/v3/api-docs",
+          "/webjars/**",
+          "/login",
+          "/register",
+          "/users/image/*/from-db",
+          "/ads/image/*/from-db"
   };
 
   @Bean
-  public InMemoryUserDetailsManager userDetailsService() {
-    UserDetails user =
-        User.builder()
-            .username("user@gmail.com")
-            .password("password")
-            .passwordEncoder((plainText) -> passwordEncoder().encode(plainText))
-            .roles("USER")
-            .build();
-    return new InMemoryUserDetailsManager(user);
-  }
-
-  @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http
-            .csrf().disable()
-            .authorizeHttpRequests((authz) ->
-                    authz
-                            .mvcMatchers(AUTH_WHITELIST).permitAll()
-                            .mvcMatchers("/ads/**", "/users/**").authenticated()
-
+    http.csrf()
+            .disable()
+            .authorizeHttpRequests(
+                    (authorization) ->
+                            authorization
+                                    .mvcMatchers(AUTH_WHITELIST)
+                                    .permitAll()
+                                    .mvcMatchers(HttpMethod.GET, "/ads").permitAll()
+                                    .mvcMatchers("/ads/**", "/users/**").authenticated()
             )
-            .cors().and()
+            .cors()
+            .and()
             .httpBasic(withDefaults());
     return http.build();
   }
@@ -56,8 +49,5 @@ public class WebSecurityConfig {
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
-  }
-
-  public WebSecurityConfig() {
   }
 }
