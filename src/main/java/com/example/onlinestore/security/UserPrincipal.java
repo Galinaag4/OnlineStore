@@ -8,27 +8,27 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-public class UserSecurity implements UserDetails {
-    private final UserModel userModel;
+public class UserPrincipal implements UserDetails {
+    private final UserModel user;
 
-    public UserSecurity(UserModel userModel) {
-        this.userModel = userModel;
+    public UserPrincipal(UserModel user) {
+        this.user = user;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority grantedAuthority = new SimpleGrantedAuthority(userModel.getRole().name());
+        SimpleGrantedAuthority grantedAuthority = new SimpleGrantedAuthority(user.getRole().name());
         return List.of(grantedAuthority);
     }
 
     @Override
     public String getPassword() {
-        return userModel.getPassword();
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return userModel.getUsername();
+        return user.getUsername();
     }
 
     @Override
@@ -49,5 +49,4 @@ public class UserSecurity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-}
+    }}
