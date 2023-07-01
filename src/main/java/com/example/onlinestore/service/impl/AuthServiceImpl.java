@@ -2,6 +2,7 @@ package com.example.onlinestore.service.impl;
 
 import com.example.onlinestore.dto.NewPassword;
 import com.example.onlinestore.repository.UserRepository;
+import com.example.onlinestore.security.UserDetailsManagerImpl;
 import com.example.onlinestore.service.AuthService;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,15 +16,16 @@ import com.example.onlinestore.dto.Role;
 @Service
 public class AuthServiceImpl implements AuthService {
 
-  private final UserDetailsManager manager;
+  private final UserDetailsManagerImpl manager;
+
+  private final UserServiceImpl service;
 
   private final PasswordEncoder encoder;
-  private final UserRepository userRepository;
 
-  public AuthServiceImpl(UserDetailsManager manager, UserRepository userRepository) {
+  public AuthServiceImpl(UserDetailsManagerImpl manager, UserServiceImpl service, PasswordEncoder passwordEncoder) {
     this.manager = manager;
-    this.userRepository = userRepository;
-    this.encoder = new BCryptPasswordEncoder();
+    this.service = service;
+    this.encoder = passwordEncoder;
   }
 
   @Override
@@ -40,25 +42,14 @@ public class AuthServiceImpl implements AuthService {
     if (manager.userExists(registerReq.getUsername())) {
       return false;
     }
-    manager.createUser(
-        User.builder()
-            .passwordEncoder(this.encoder::encode)
-            .password(registerReq.getPassword())
-            .username(registerReq.getUsername())
-            .roles(role.name())
-            .build());
+
+    service.createUser(registerReq, role);
     return true;
+
   }
 
   @Override
   public boolean changePassword(NewPassword newPassword, String name) {
-    if (login(name, newPassword.getCurrentPassword())) {
-      BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-      manager.changePassword(
-              newPassword.getCurrentPassword(),
-              "{bcrypt}" + encoder.encode(newPassword.getNewPassword()));
-      return true;
-    }
     return false;
   }
-  }
+}

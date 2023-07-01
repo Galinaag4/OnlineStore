@@ -1,6 +1,8 @@
 package com.example.onlinestore.service.impl;
 
 import com.example.onlinestore.dto.NewPassword;
+import com.example.onlinestore.dto.RegisterReq;
+import com.example.onlinestore.dto.Role;
 import com.example.onlinestore.dto.User;
 import com.example.onlinestore.mapper.UserMapper;
 import com.example.onlinestore.model.ImageModel;
@@ -20,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
@@ -97,9 +100,16 @@ public class UserServiceImpl implements UserDetailsManager {
 
     }
 
+    public void createUser(RegisterReq registerReq, Role role) {
+        UserModel userModel = userMapper.mapRegisterReqToUserModel(registerReq, new UserModel());
+        userModel.setPassword(passwordEncoder.encode(registerReq.getPassword()));
+        userModel.setRole(Objects.requireNonNullElse(role, Role.USER));
+        userRepository.save(userModel);
+    }
 
     @Override
     public void createUser(UserDetails user) {
+
     }
 
     @Override

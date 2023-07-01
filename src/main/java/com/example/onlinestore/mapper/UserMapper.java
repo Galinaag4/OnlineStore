@@ -13,9 +13,10 @@ import java.io.IOException;
 public interface UserMapper {
 
     User toUser(RegisterReq registerReq);
+
     @Mapping(source = "username", target = "email")
     @Mapping(target = "image", expression = "java(getImageModel(userModel))")
-    void toUser (@MappingTarget User user, UserModel userModel);
+    void toUser(@MappingTarget User user, UserModel userModel);
 
     default String getImageModel(UserModel userModel) {
         if (userModel.getImageModel() == null) {
@@ -28,4 +29,14 @@ public interface UserMapper {
     @Mapping(ignore = true, target = "userModel.imageModel")
     @Mapping(ignore = true, target = "userModel.username")
     void toUserModel(@MappingTarget UserModel userModel, User user);
+
+    public default UserModel mapRegisterReqToUserModel(RegisterReq registerReq, UserModel userModel) {
+        userModel.setUsername(registerReq.getUsername());
+        userModel.setPassword(registerReq.getPassword());
+        userModel.setFirstName(registerReq.getFirstName());
+        userModel.setLastName(registerReq.getLastName());
+        userModel.setPhone(registerReq.getPhone());
+        userModel.setRole(registerReq.getRole());
+        return userModel;
+    }
 }
