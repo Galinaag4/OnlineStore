@@ -7,6 +7,7 @@ import com.example.onlinestore.model.ImageModel;
 import com.example.onlinestore.model.UserModel;
 import com.example.onlinestore.repository.ImageRepository;
 import com.example.onlinestore.repository.UserRepository;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +24,7 @@ import java.util.Optional;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 @Service
+@Primary
 public class UserServiceImpl implements UserDetailsManager {
     private final UserRepository userRepository;
     private final ImageRepository imageRepository;

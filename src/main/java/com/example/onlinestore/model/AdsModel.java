@@ -36,7 +36,7 @@ public class AdsModel {
     private String description;
 
     @ToString.Exclude
-    @OneToOne(mappedBy = "ads", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "adsModel", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private ImageModel imageModel;
 
     public Integer getId() {
