@@ -22,11 +22,11 @@ public interface CommentMapper {
 
     Comment commentModelToComment (CommentModel commentModel);
 
-    default String getImageModel(CommentModel commentModel) {
-        if (commentModel.getUserModel().getImageModel() == null) {
+    default String getImageModel(Comment commentModel) {
+        if (commentModel.getAuthorImage() == null) {
             return null;
         }
-        return "/users/image/" + commentModel.getUserModel().getId() + "/from-db";
+        return "/users/image/" + commentModel.getAuthor() + "/from-db";
     }
 
 
