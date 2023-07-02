@@ -151,7 +151,6 @@ public class UserController {
         ImageModel imageModel = userServiceImpl.getUserImage(id);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType(imageModel.getMediaType()));
         headers.setContentLength(imageModel.getImage().length);
 
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(imageModel.getImage());
