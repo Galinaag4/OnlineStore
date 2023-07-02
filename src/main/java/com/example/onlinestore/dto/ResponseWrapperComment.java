@@ -9,5 +9,6 @@ public class ResponseWrapperComment<C> {
     private  int count;
     private  Collection<C> results;
 
-
+    public ResponseWrapperComment() {
+    }
 }

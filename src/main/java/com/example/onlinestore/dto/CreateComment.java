@@ -5,4 +5,7 @@ import lombok.Data;
 @Data
 public class CreateComment {
     private String text;
+
+    public CreateComment() {
+    }
 }

@@ -24,10 +24,6 @@ public class AdsModel {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "pk")
-    private Integer pk;
-
-    private Integer author;
 
     @Column(name = "price")
     private int price;
