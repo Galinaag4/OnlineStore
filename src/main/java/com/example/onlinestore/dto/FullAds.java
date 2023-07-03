@@ -15,4 +15,6 @@ public class FullAds {
     private Integer price;
     private String title;
 
+    public FullAds() {
+    }
 }

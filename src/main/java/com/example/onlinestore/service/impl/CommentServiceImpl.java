@@ -53,7 +53,7 @@ public class CommentServiceImpl {
         CommentModel commentModel = commentMapper.toCommentModel(createComment);
         commentModel.setAdsModel(adsRepository.findById(id).orElse(null));
         commentModel.setUserModel(userRepository.findByUsername(userServiceImpl.getCurrentUsername()).orElseThrow(() -> new UsernameNotFoundException("User not found")));
-        commentModel.setCreatedAt((int) System.currentTimeMillis());
+        commentModel.setCreatedAt(System.currentTimeMillis());
         commentRepository.save(commentModel);
         return commentMapper.commentModelToComment(commentModel);
     }

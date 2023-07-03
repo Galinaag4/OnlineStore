@@ -393,7 +393,6 @@ public class AdsController {
        ImageModel imageModel = adsServiceImpl.getAdImage(id);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType(imageModel.getMediaType()));
         headers.setContentLength(imageModel.getImage().length);//гет image или гет image byte
 
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(imageModel.getImage());

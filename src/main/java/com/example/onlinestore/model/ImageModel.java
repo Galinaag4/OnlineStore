@@ -23,8 +23,6 @@ public class ImageModel {
     private Integer id;
     @Lob
     private byte[] image;
-    private String mediaType;
-    private Long fileSize;
 
     @ToString.Exclude
     @OneToOne(fetch = FetchType.LAZY)
@@ -48,13 +46,6 @@ public class ImageModel {
         this.image = image;
     }
 
-    public String getMediaType() {
-        return mediaType;
-    }
-
-    public void setMediaType(String mediaType) {
-        this.mediaType = mediaType;
-    }
 
     public AdsModel getAdsModel() {
         return adsModel;
@@ -64,11 +55,5 @@ public class ImageModel {
         this.adsModel = adsModel;
     }
 
-    public Long getFileSize() {
-        return fileSize;
-    }
 
-    public void setFileSize(Long fileSize) {
-        this.fileSize = fileSize;
-    }
 }
