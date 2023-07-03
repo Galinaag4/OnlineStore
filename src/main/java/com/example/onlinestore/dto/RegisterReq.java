@@ -11,7 +11,6 @@ public class RegisterReq {
     private String phone;
     private Role role;
 
-    public Role getRole() {
-        return role;
+    public RegisterReq() {
     }
 }

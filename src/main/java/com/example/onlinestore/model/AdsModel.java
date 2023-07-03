@@ -18,16 +18,12 @@ public class AdsModel {
     private Integer id;
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private UserModel userModel;
 
     @Column(name = "title")
     private String title;
 
-    @Column(name = "pk")
-    private Integer pk;
-
-    private Integer author;
 
     @Column(name = "price")
     private int price;

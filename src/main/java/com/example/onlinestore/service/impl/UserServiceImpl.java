@@ -93,7 +93,6 @@ public class UserServiceImpl implements UserDetailsManager {
         UserModel user = userRepository.findByUsername(getCurrentUsername()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         ImageModel image = imageRepository.findById(user.getId()).orElse(new ImageModel());
 //        image.setFileSize(file.getSize());
-        image.setMediaType(file.getContentType());
         image.setImage(file.getBytes());
         imageRepository.save(image);
         user.setImageModel((image));

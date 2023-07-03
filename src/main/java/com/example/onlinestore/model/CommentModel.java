@@ -19,11 +19,8 @@ public class CommentModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-
-    @Column(name = "author")
-    private Integer author;
     @Column(name = "created_at")
-    private Integer createdAt;
+    private Long createdAt;
     @Column(name = "text")
     private String text;
     @ManyToOne
@@ -44,11 +41,11 @@ public class CommentModel {
     }
 
 
-    public Integer getCreatedAt() {
+    public Long getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Integer createdAt) {
+    public void setCreatedAt(Long createdAt) {
         this.createdAt = createdAt;
     }
 

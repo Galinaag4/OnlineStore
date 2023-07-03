@@ -47,7 +47,7 @@ public class UserModel implements UserDetails {
     private ImageModel imageModel;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "author",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "userModel",fetch = FetchType.LAZY)
     private Set<AdsModel> adsModels;
 
 
