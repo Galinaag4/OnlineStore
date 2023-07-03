@@ -13,4 +13,6 @@ import java.util.Optional;
 public interface AdsRepository extends JpaRepository <AdsModel, Integer> {
     List<AdsModel> findAllByUserModelId(Integer userModelId);
 
+    List<AdsModel> findByTitleContainingIgnoreCaseOrderByTitle(String title);
+
 }

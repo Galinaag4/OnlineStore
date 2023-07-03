@@ -1,16 +1,16 @@
 
 ###
-GET http://localhost:8080/get
+GET http://localhost:3000/get
 Content-Type: application/json
 Authorization: Basic user@gmail.com password
 
 ###
-GET http://localhost:8080/ads/asddsfsdf/comment
+GET http://localhost:3000/ads/asddsfsdf/comment
 Content-Type: application/json
 Authorization: Basic user@gmail.com password
 
 ###
-POST http://localhost:8080/login
+POST http://localhost:3000/login
 Content-Type: application/json
 
 {
@@ -22,7 +22,7 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:8080/register
+POST http://localhost:3000/register
 Content-Type: application/json
 
 {
@@ -31,17 +31,17 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:8080/ads/me
+GET http://localhost:3000/ads/me
 Content-Type: application/json
 Authorization: Basic user@gmail.com password
 
 ###
-GET http://localhost:8080/users/me
+GET http://localhost:3000/users/me
 Content-Type: application/json
 Authorization: Basic user@gmail.com password
 
 ###
-PATCH http://localhost:8080/users/me
+PATCH http://localhost:3000/users/me
 Content-Type: application/json
 Authorization: Basic user@gmail.com password
 
@@ -54,18 +54,18 @@ Authorization: Basic user@gmail.com password
 }
 
 ###
-GET http://localhost:8080/users/1
+GET http://localhost:3000/users/1
 Content-Type: application/json
 Authorization: Basic user@gmail.com password
 
 ###
-GET http://localhost:8080/ads
+GET http://localhost:3000/ads
 Content-Type: application/json
 Authorization: Basic user@gmail.com password
 
 
 ###
-POST http://localhost:8080/users/set_password
+POST http://localhost:3000/users/set_password
 Content-Type: application/json
 Authorization: Basic user@gmail.com password
 
@@ -75,7 +75,7 @@ Authorization: Basic user@gmail.com password
 }
 
 ###
-POST http://localhost:8080/ads
+POST http://localhost:3000/ads
 Content-Type: application/json
 Authorization: Basic user@gmail.com password
 
@@ -88,7 +88,7 @@ Authorization: Basic user@gmail.com password
 }
 
 ###
-GET http://localhost:8080/ads
+GET http://localhost:3000/ads
 Content-Type: application/json
 Authorization: Basic user@gmail.com password
 
