@@ -66,7 +66,6 @@ public class AdsServiceImpl{
         ImageModel imageModel = new ImageModel();
 
 //        imageModel.setFileSize(file.getSize());
-        imageModel.setMediaType(file.getContentType());
         imageModel.setImage(file.getBytes());
         imageRepository.save(imageModel);
         adsModel.setImageModel(imageModel);
@@ -102,7 +101,6 @@ public class AdsServiceImpl{
         AdsModel adsModel = adsRepository.findById(id).orElseThrow();
         ImageModel imageModel = imageRepository.findById(adsModel.getId()).orElse(new ImageModel());
 //        imageModel.setFileSize(file.getSize());
-        imageModel.setMediaType(file.getContentType());
         imageModel.setImage(file.getBytes());
         imageRepository.save(imageModel);
         adsModel.setImageModel(imageModel);
