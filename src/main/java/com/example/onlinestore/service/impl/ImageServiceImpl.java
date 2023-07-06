@@ -1,8 +1,5 @@
 package com.example.onlinestore.service.impl;
 
-import com.example.onlinestore.dto.Ads;
-import com.example.onlinestore.exception.AdsNotFoundException;
-import com.example.onlinestore.model.AdsModel;
 import com.example.onlinestore.model.ImageModel;
 import com.example.onlinestore.repository.AdsRepository;
 import com.example.onlinestore.repository.ImageRepository;
@@ -12,28 +9,58 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import java.awt.*;
+
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Objects;
 import java.util.UUID;
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class ImageServiceImpl implements ImageService {
     private final AdsRepository adsRepository;
-
     private final ImageRepository imageRepository;
 
 
+//    @Override
+//    public byte[] updateAdsImage(Integer id, MultipartFile image, Authentication authentication) throws IOException {
+//        return new byte[0];
+//    }
+//
+//    @Override
+//    public byte[] getImage(String id) {
+//        return new byte[0];
+//    }
+//
+//    @Override
+//    public byte[] getImage(int id) throws IOException {
+//        return new byte[0];
+//    }
+
+
+
+     //Метод сохраняет картинку в БД
     @Override
-    public byte[] updateAdsImage(Integer id, MultipartFile image, Authentication authentication) throws IOException {
-        return new byte[0];
+    public ImageModel saveImage(MultipartFile image) {
+        ImageModel imageModel = new ImageModel();
+        try {
+            {
+                byte[] bytes = image.getBytes();
+                imageModel.setImage(bytes);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return imageRepository.saveAndFlush(imageModel);
     }
 
+    //Метод сохраняет и обновляет картинку в БД
     @Override
-    public byte[] getImage(int id) throws IOException {
-        return new byte[0];
+    public ImageModel updateImage(MultipartFile newImage, ImageModel oldImageModel) {
+        try {
+            byte[] bytes = newImage.getBytes();
+            oldImageModel.setImage(bytes);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return imageRepository.saveAndFlush(oldImageModel);
     }
 }

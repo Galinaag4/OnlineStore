@@ -1,9 +1,7 @@
 package com.example.onlinestore.service;
 
-import com.example.onlinestore.dto.Ads;
-import com.example.onlinestore.dto.Comment;
-import com.example.onlinestore.dto.CreateAds;
-import com.example.onlinestore.dto.FullAds;
+import com.example.onlinestore.dto.*;
+import com.example.onlinestore.model.AdsModel;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,10 +11,22 @@ import java.util.Collection;
 
 @Service
 public interface AdsService {
-    Collection<Ads> getAllAds(String title);
-    Ads save(CreateAds ads,Authentication authentication, MultipartFile photo) throws IOException;
-    void deleteAds(Integer adsId, Authentication authentication);
-    FullAds getFullAdsModel(Long adsId);
-    Collection<Ads> getAdsModelByUser(String email);
+    Ads createAds (CreateAds ads, MultipartFile image, Authentication authentication);
+
+    CreateAds editAds(Integer id, Ads ads, Authentication authentication);
+    void deleteAds (Integer adsId, Authentication authentication);
+    ResponseWrapperAds getAllAds(String title);
+
+    ResponseWrapperAds getAllAdsUser(Authentication authentication);
+    FullAds getFullAdsById (Integer adsId);
+
+    AdsModel getAdsModel(Integer adsId);
+
+    String updateAdsImage(Integer id, MultipartFile image) throws IOException;
+
+
+
+
+
 
 }

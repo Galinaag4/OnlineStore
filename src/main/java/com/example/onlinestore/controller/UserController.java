@@ -2,6 +2,7 @@ package com.example.onlinestore.controller;
 
 import com.example.onlinestore.dto.NewPassword;
 import com.example.onlinestore.dto.User;
+import com.example.onlinestore.exception.PasswordChangeException;
 import com.example.onlinestore.mapper.UserMapper;
 import com.example.onlinestore.model.ImageModel;
 import com.example.onlinestore.model.UserModel;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+
 
 @Slf4j
 @CrossOrigin(origins = "http://localhost:3000")
@@ -60,13 +62,13 @@ public class UserController {
                     )
             })
     @PostMapping("/set_password")
-    public ResponseEntity<?> setPassword(@RequestBody NewPassword newPassword) {
-
-        if (userServiceImpl.setPassword(newPassword)) {
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-
+    public ResponseEntity<NewPassword> setPassword(@RequestBody NewPassword newPassword, Authentication authentication)
+            throws PasswordChangeException {
+        return ResponseEntity.ok(userServiceImpl.setPassword(newPassword, authentication));
+//        if (userServiceImpl.setPassword(newPassword)) {
+//            return ResponseEntity.ok().build();
+//        }
+//        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
 
@@ -140,9 +142,9 @@ public class UserController {
                     )
             })
     @PatchMapping(value = "me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateUserImage(@RequestParam("image") MultipartFile file) throws IOException {
+    public ResponseEntity<?> updateUserImage(@RequestParam("image") MultipartFile file, Authentication authentication) throws IOException {
 
-        userServiceImpl.updateUserImage(file);
+        userServiceImpl.updateAvatar(file, authentication);
         return ResponseEntity.ok().build();
     }
 

@@ -10,6 +10,5 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository <UserModel, Integer>{
     Optional<UserModel> findByUsername(String username);
     Integer getImageById(Integer userModelId);
-
-
+    Optional<UserModel> findByEmail(String userName);
 }

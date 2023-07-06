@@ -2,7 +2,6 @@ package com.example.onlinestore.controller;
 
 import com.example.onlinestore.dto.*;
 import com.example.onlinestore.model.ImageModel;
-
 import com.example.onlinestore.service.impl.AdsServiceImpl;
 import com.example.onlinestore.service.impl.CommentServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,12 +14,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,7 +34,6 @@ public class AdsController {
     private final AdsServiceImpl adsServiceImpl;
     private final CommentServiceImpl commentServiceImpl;
 
-
     @Operation(summary = "Получить все объявления",
             tags = "Объявления",
             responses = {
@@ -50,8 +47,8 @@ public class AdsController {
                     )
             })
     @GetMapping()
-    public ResponseEntity<ResponseWrapperAds> getAllAds() {
-        return ResponseEntity.ok(adsServiceImpl.getAllAds());
+    public ResponseEntity<ResponseWrapperAds> getAllAds(@RequestParam(required = false) String title) {
+        return ResponseEntity.ok(adsServiceImpl.getAllAds(title));
     }
 
     @Operation(summary = "Добавить объявление",
@@ -77,9 +74,10 @@ public class AdsController {
                     )
             })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Ads> addAds(@RequestPart("properties") CreateAds properties,
-                                        @RequestPart("image") MultipartFile image) throws IOException {
-        return ResponseEntity.ok(adsServiceImpl.addAd(properties, image));
+    public ResponseEntity<Ads> addAds(@RequestPart("properties") CreateAds createAds,
+                                      @RequestPart("image") MultipartFile image, Authentication authentication)
+            throws IOException {
+        return ResponseEntity.ok(adsServiceImpl.createAds(createAds, image, authentication));
     }
 
     @Operation(summary = "Получить комментарии объявления",
@@ -172,7 +170,7 @@ public class AdsController {
             })
     @GetMapping("{id}")
     public ResponseEntity<FullAds> getAds(@PathVariable Integer id) {
-        return ResponseEntity.ok(adsServiceImpl.getAds(id));
+        return ResponseEntity.ok(adsServiceImpl.getFullAdsById(id));
     }
 
     @Operation(summary = "Удалить объявление",
@@ -200,8 +198,8 @@ public class AdsController {
                     )
             })
     @DeleteMapping("{id}")
-    public ResponseEntity<?> removeAd(@PathVariable Integer id) {
-        adsServiceImpl.removeAd(id);
+    public ResponseEntity<?> removeAd(@PathVariable Integer id, Authentication authentication) {
+        adsServiceImpl.removeAd(id, authentication);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -342,9 +340,9 @@ public class AdsController {
                     )
             })
     @GetMapping("me")
-    public ResponseEntity<ResponseWrapperAds> getAdsMe() {
+    public ResponseEntity<ResponseWrapperAds> getAdsMe(Authentication authentication) {
 
-        return ResponseEntity.ok(adsServiceImpl.getAdsMe());
+        return ResponseEntity.ok(adsServiceImpl.getAllAdsUser(authentication));
     }
 
     @Operation(summary = "Обновить картинку объявления",
@@ -382,15 +380,15 @@ public class AdsController {
                     )
             })
     @PatchMapping(value = "{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<byte[]> updateImage(@PathVariable Integer id, @RequestParam MultipartFile image) throws IOException{
-        adsServiceImpl.updateAdImage(id, image);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> updateImage(@PathVariable Integer id, @RequestParam MultipartFile image)
+            throws IOException {
+        return ResponseEntity.ok(adsServiceImpl.updateAdsImage(id, image));
     }
 
 
     @GetMapping("/image/{id}/from-db")
     public ResponseEntity<byte[]> getAdImage(@PathVariable Integer id) {
-       ImageModel imageModel = adsServiceImpl.getAdImage(id);
+        ImageModel imageModel = adsServiceImpl.getAdImage(id);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentLength(imageModel.getImage().length);//гет image или гет image byte
