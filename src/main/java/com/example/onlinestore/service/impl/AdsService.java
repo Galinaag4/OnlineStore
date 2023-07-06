@@ -4,8 +4,6 @@ import com.example.onlinestore.dto.Ads;
 import com.example.onlinestore.dto.CreateAds;
 import com.example.onlinestore.dto.FullAds;
 import com.example.onlinestore.dto.ResponseWrapperAds;
-import com.example.onlinestore.exception.AdsNotFoundException;
-import com.example.onlinestore.exception.NotFoundUserException;
 import com.example.onlinestore.mapper.AdsMapper;
 import com.example.onlinestore.model.AdsModel;
 import com.example.onlinestore.model.ImageModel;
@@ -13,38 +11,32 @@ import com.example.onlinestore.model.UserModel;
 import com.example.onlinestore.repository.AdsRepository;
 import com.example.onlinestore.repository.ImageRepository;
 import com.example.onlinestore.repository.UserRepository;
-import com.example.onlinestore.service.AdsService;
-import com.example.onlinestore.service.ImageService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
-
-import static org.springframework.util.ObjectUtils.isEmpty;
 @Slf4j
 @Service
 @Transactional
-public class AdsServiceImpl{
+public class AdsService {
 
     private final AdsRepository adsRepository;
     private final ImageRepository imageRepository;
     private final UserRepository userRepository;
-    private final UserServiceImpl userServiceImpl;
+    private final UserService userService;
     private final AdsMapper adsMapper;
-    private final CommentServiceImpl commentServiceImpl;
+    private final CommentService commentService;
 
-    public AdsServiceImpl(AdsRepository adsRepository, ImageRepository imageRepository, UserRepository userRepository, UserServiceImpl userServiceImpl, AdsMapper adsMapper, CommentServiceImpl commentServiceImpl) {
+    public AdsService(AdsRepository adsRepository, ImageRepository imageRepository, UserRepository userRepository, UserService userService, AdsMapper adsMapper, CommentService commentService) {
         this.adsRepository = adsRepository;
         this.imageRepository = imageRepository;
         this.userRepository = userRepository;
-        this.userServiceImpl = userServiceImpl;
+        this.userService = userService;
         this.adsMapper = adsMapper;
-        this.commentServiceImpl = commentServiceImpl;
+        this.commentService = commentService;
     }
 
     public ResponseWrapperAds getAllAds() {
@@ -64,12 +56,11 @@ public class AdsServiceImpl{
     public Ads addAd(CreateAds properties, MultipartFile file) throws IOException {
         AdsModel adsModel = adsMapper.toAdsModel(properties);
         ImageModel imageModel = new ImageModel();
-
 //        imageModel.setFileSize(file.getSize());
         imageModel.setImage(file.getBytes());
         imageRepository.save(imageModel);
         adsModel.setImageModel(imageModel);
-        adsModel.setUserModel(userRepository.findByUsername(userServiceImpl.getCurrentUsername()).orElseThrow(() -> new UsernameNotFoundException("User not found")));
+        adsModel.setUserModel(userRepository.findByUsername(userService.getCurrentUsername()).orElseThrow(() -> new UsernameNotFoundException("User not found")));
         adsRepository.save(adsModel);
         return adsMapper.adsModelToAds(adsModel);
     }
@@ -82,7 +73,7 @@ public class AdsServiceImpl{
     @Transactional
     public ResponseWrapperAds getAdsMe() {
         ResponseWrapperAds responseWrapperAds = new ResponseWrapperAds();
-        UserModel userModel = userRepository.findByUsername(userServiceImpl.getCurrentUsername()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        UserModel userModel = userRepository.findByUsername(userService.getCurrentUsername()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         List<AdsModel> adList = adsRepository.findAllByUserModelId(userModel.getId());
         responseWrapperAds.setResults(adsMapper.adListToAdsDtoList(adList));
         responseWrapperAds.setCount(adList.size());
@@ -92,7 +83,7 @@ public class AdsServiceImpl{
     @Transactional
     public void removeAd(Integer id) {
         imageRepository.delete(adsRepository.findById(id).map(AdsModel::getImageModel).orElseThrow());
-        commentServiceImpl.deleteCommentsByAdId(id);
+        commentService.deleteCommentsByAdId(id);
         adsRepository.deleteById(id);
     }
 

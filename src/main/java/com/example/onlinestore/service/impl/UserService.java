@@ -28,13 +28,13 @@ import java.util.Optional;
 import static org.springframework.util.ObjectUtils.isEmpty;
 @Service
 @Primary
-public class UserServiceImpl implements UserDetailsManager {
+public class UserService implements UserDetailsManager {
     private final UserRepository userRepository;
     private final ImageRepository imageRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
-    public UserServiceImpl(UserRepository userRepository, ImageRepository imageRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
+    public UserService(UserRepository userRepository, ImageRepository imageRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.imageRepository = imageRepository;
         this.passwordEncoder = passwordEncoder;
