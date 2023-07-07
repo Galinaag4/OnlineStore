@@ -1,34 +1,34 @@
-package com.example.onlinestore.service.impl;
+package com.example.onlinestore.service;
 
-import com.example.onlinestore.dto.NewPassword;
-import com.example.onlinestore.dto.RegisterReq;
-import com.example.onlinestore.dto.Role;
-import com.example.onlinestore.dto.User;
+import com.example.onlinestore.dto.*;
+import com.example.onlinestore.exception.IncorrectUsernameException;
+import com.example.onlinestore.exception.NotFoundUserException;
+import com.example.onlinestore.exception.PasswordChangeException;
 import com.example.onlinestore.mapper.UserMapper;
 import com.example.onlinestore.model.ImageModel;
 import com.example.onlinestore.model.UserModel;
 import com.example.onlinestore.repository.ImageRepository;
 import com.example.onlinestore.repository.UserRepository;
+import com.example.onlinestore.security.UserDetailsCustom;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.IOException;
-import java.util.Objects;
 import java.util.Optional;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 @Service
 @Primary
-public class UserService implements UserDetailsManager {
+public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final ImageRepository imageRepository;
     private final PasswordEncoder passwordEncoder;
@@ -44,12 +44,28 @@ public class UserService implements UserDetailsManager {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return (UserDetails) userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        Optional<UserModel> optionalUser = userRepository.getUserByUsernameIgnoreCase(username);
+
+        if (optionalUser.isPresent()) {
+            UserModel userModel = optionalUser.get();
+            return new UserDetailsCustom(userModel);
+        } else {
+            throw new UsernameNotFoundException("User not found with username: " + username);
+        }
     }
 
     @Transactional
-    public void createUser(UserModel userModel) {
-        userModel.setPassword(passwordEncoder.encode(userModel.getPassword()));
+    public void createUser(RegisterReq registerReq) {
+        if (userRepository.findByUsername(registerReq.getUsername()).isPresent()) {
+            throw new IncorrectUsernameException();
+        }
+        UserModel userModel = new UserModel();
+        userModel.setUsername(registerReq.getUsername());
+        userModel.setPassword(passwordEncoder.encode(registerReq.getPassword()));
+        userModel.setRole(Role.USER);
+        userModel.setFirstName(registerReq.getFirstName());
+        userModel.setLastName(registerReq.getLastName());
+        userModel.setPhone(registerReq.getPhone());
         userRepository.save(userModel);
     }
 
@@ -59,8 +75,8 @@ public class UserService implements UserDetailsManager {
     }
 
     @Transactional
-    public boolean setPassword(NewPassword newPassword) {
-        UserModel currentUser = userRepository.findByUsername(getCurrentUsername()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    public boolean setPassword(NewPassword newPassword,Authentication authentication) {
+        UserModel currentUser = userRepository.findByUsername(authentication.getName()).orElseThrow(NotFoundUserException::new);
         if (passwordEncoder.matches(newPassword.getCurrentPassword(), currentUser.getPassword())) {
             currentUser.setPassword(passwordEncoder.encode(newPassword.getNewPassword()));
             return true;
@@ -69,8 +85,8 @@ public class UserService implements UserDetailsManager {
     }
 
     @Transactional(readOnly = true)
-    public User getUser() {
-        UserModel currentUser = userRepository.findByUsername(getCurrentUsername()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    public User getUser(Authentication authentication) {
+        UserModel currentUser = userRepository.findByUsername(authentication.getName()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         User user = new User();
         userMapper.toUser(user, currentUser);
         return user;
@@ -82,7 +98,6 @@ public class UserService implements UserDetailsManager {
         currentUser.ifPresent((userModel) -> userMapper.toUserModel(userModel, user));
         return currentUser.isPresent();
     }
-
     @Transactional(readOnly = true)
     public ImageModel getUserImage(Integer userId) {
         return userRepository.findById(userId).map(UserModel::getImageModel).orElse(null);
@@ -98,35 +113,4 @@ public class UserService implements UserDetailsManager {
         user.setImageModel((image));
 
     }
-
-    public void createUser(RegisterReq registerReq, Role role) {
-        UserModel userModel = userMapper.mapRegisterReqToUserModel(registerReq, new UserModel());
-        userModel.setPassword(passwordEncoder.encode(registerReq.getPassword()));
-        userModel.setRole(Objects.requireNonNullElse(role, Role.USER));
-        userRepository.save(userModel);
-    }
-
-    @Override
-    public void createUser(UserDetails user) {
-
-    }
-
-    @Override
-    public void updateUser(UserDetails user) {
-    }
-
-
-    @Override
-    public void deleteUser(String username) {
-    }
-
-    @Override
-    public void changePassword(String oldPassword, String newPassword) {
-    }
-
-    @Override
-    public boolean userExists(String username) {
-        return userRepository.findByUsername(username).isPresent();
-    }
-
 }

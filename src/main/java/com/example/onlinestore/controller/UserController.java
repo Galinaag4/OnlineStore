@@ -2,9 +2,10 @@ package com.example.onlinestore.controller;
 
 import com.example.onlinestore.dto.NewPassword;
 import com.example.onlinestore.dto.User;
+import com.example.onlinestore.exception.PasswordChangeException;
 import com.example.onlinestore.model.ImageModel;
 import com.example.onlinestore.service.AuthService;
-import com.example.onlinestore.service.impl.UserService;
+import com.example.onlinestore.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -16,11 +17,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 
 @Slf4j
@@ -56,10 +58,9 @@ public class UserController {
                     )
             })
     @PostMapping("/set_password")
-    public ResponseEntity<NewPassword> setPassword(@RequestBody NewPassword newPassword, Authentication authentication) {
-
-        if (authService.changePassword(newPassword, authentication.getName())) {
-            return ResponseEntity.ok(newPassword);
+    public ResponseEntity<NewPassword> setPassword(@RequestBody @Valid NewPassword newPassword, Authentication authentication) {
+        if (userService.setPassword(newPassword, authentication)) {
+            return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
@@ -83,8 +84,8 @@ public class UserController {
                     )
             })
     @GetMapping("/me")
-    public ResponseEntity<User> getUser() {
-        return ResponseEntity.ok(userService.getUser());
+    public ResponseEntity<User> getUser(@NotNull Authentication authentication) {
+        return ResponseEntity.ok(userService.getUser(authentication));
     }
 
     @Operation(summary = "Обновить информацию об авторизованном пользователе",
@@ -110,7 +111,8 @@ public class UserController {
                     )
             })
     @PatchMapping("/me")
-    public ResponseEntity<User> updateUser(@RequestBody User user) {
+
+    public ResponseEntity<User> updateUser(@RequestBody @Valid User user,Authentication authentication) {
         if (userService.updateUser(user)) {
             return ResponseEntity.ok(user);
         }

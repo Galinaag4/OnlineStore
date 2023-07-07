@@ -1,59 +1,46 @@
 package com.example.onlinestore.service.impl;
 
 import com.example.onlinestore.dto.NewPassword;
+import com.example.onlinestore.exception.NotFoundUserException;
+import com.example.onlinestore.exception.PasswordChangeException;
+import com.example.onlinestore.model.UserModel;
+import com.example.onlinestore.repository.UserRepository;
 import com.example.onlinestore.service.AuthService;
+import com.example.onlinestore.service.UserService;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 import com.example.onlinestore.dto.RegisterReq;
-import com.example.onlinestore.dto.Role;
-
+@Log4j2
 @Service
 public class AuthServiceImpl implements AuthService {
 
-  private final UserDetailsManager manager;
 
-  private final UserService service;
+  private final UserRepository userRepository;
+  private final UserService userService;
 
-  private final PasswordEncoder encoder;
+  private final PasswordEncoder passwordEncoder;
 
-  public AuthServiceImpl(UserDetailsManager manager, UserService service, PasswordEncoder passwordEncoder) {
-    this.manager = manager;
-    this.service = service;
-    this.encoder = passwordEncoder;
+  public AuthServiceImpl( UserRepository userRepository, UserService userService, PasswordEncoder passwordEncoder) {
+    this.userRepository = userRepository;
+    this.userService = userService;
+    this.passwordEncoder = passwordEncoder;
   }
 
   @Override
   public boolean login(String userName, String password) {
-    if (!manager.userExists(userName)) {
-      return false;
-    }
-    UserDetails userDetails = manager.loadUserByUsername(userName);
-    return encoder.matches(password, userDetails.getPassword());
+
+    UserDetails userDetails = userService.loadUserByUsername(userName);
+    return passwordEncoder.matches(password, userDetails.getPassword());
   }
 
   @Override
-  public boolean register(RegisterReq registerReq, Role role) {
-    if (manager.userExists(registerReq.getUsername())) {
-      return false;
-    }
-
-    service.createUser(registerReq, role);
+  public boolean register(RegisterReq registerReq) {
+    userService.createUser(registerReq);
+    log.info("Зарегистрирован новый пользователь: " + registerReq.getUsername());
     return true;
-
-  }
-
-  @Override
-  public boolean changePassword(NewPassword newPassword, String username) {
-    if (login(username, newPassword.getCurrentPassword())) {
-      BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-      manager.changePassword(
-              newPassword.getCurrentPassword(),
-              "{bcrypt}" + encoder.encode(newPassword.getNewPassword()));
-      return true;
-    }
-    return false;
   }
 }
