@@ -69,13 +69,13 @@ public class UserService implements UserDetailsService {
 
 
     /**
-     * Метод создает нового пользователя 
+     * Метод создает нового пользователя
      *
      * @param registerReq
      *
      * {@link UserRepository#findByUsername(String)}
      * {@link PasswordEncoder#encode(CharSequence)}
-     * {@link UserRepository#save(Object)} 
+     * {@link UserRepository#save(Object)}
      */
     @Transactional
     public void createUser(RegisterReq registerReq) {
@@ -105,13 +105,13 @@ public class UserService implements UserDetailsService {
 
 
     /**
-     * Метод меняет пароль 
+     * Метод меняет пароль
      *
      * @param newPassword,authentication
-     * 
-     * {@link UserRepository#findByUsername(String)} 
-     * {@link PasswordEncoder#matches(CharSequence, String)} 
-     * {@link PasswordEncoder#encode(CharSequence)} 
+     *
+     * {@link UserRepository#findByUsername(String)}
+     * {@link PasswordEncoder#matches(CharSequence, String)}
+     * {@link PasswordEncoder#encode(CharSequence)}
      * @throws NotFoundUserException если пользователь не найден
      */
     @Transactional
@@ -130,11 +130,11 @@ public class UserService implements UserDetailsService {
      * Метод позволяет получить пользователя по имени
      *
      * @param authentication
-     * 
+     *
      * {@link UserRepository#findByUsername(String)}
-     * {@link UserMapper#toUser(User, UserModel)} 
+     * {@link UserMapper#toUser(User, UserModel)}
      * @throws UsernameNotFoundException если пользователь не найден
-     * 
+     *
      * @return {@link User}
      */
     @Transactional(readOnly = true)

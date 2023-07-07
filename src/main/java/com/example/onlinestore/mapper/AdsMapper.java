@@ -25,13 +25,20 @@ public interface AdsMapper {
     @Mapping(target = "phone", source = "userModel.phone")
     @Mapping(target = "image", expression="java(getImageModel(adsModel))")
     FullAds toFullAdsDto(AdsModel adsModel);
+
     default String getImageModel(AdsModel adsModel) {
+
         if (adsModel.getImageModel() == null) {
             return null;
         }
         return "/ads/image/" + adsModel.getId() + "/from-db";
     }
     List<Ads> adListToAdsDtoList(List<AdsModel> adList);
+
+    List<AdsModel> toModelList(Collection<Ads> adsCollection);
+
+    CreateAds adsModelToCreateAds(AdsModel adsModel);
+
 
 
 }

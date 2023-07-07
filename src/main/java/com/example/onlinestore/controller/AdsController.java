@@ -415,10 +415,6 @@ public class AdsController {
 
 
     @GetMapping("/image/{id}/from-db")
-//    public ResponseEntity<byte[]> getImage(@PathVariable Long id) {
-//        ImageModel imageModel = imageService.read(id);
-//        if (null != imageModel) {
-//            HttpHeaders headers = new HttpHeaders();
     public ResponseEntity<byte[]> getAdImage(@PathVariable Integer id) {
        ImageModel imageModel = adsService.getAdImage(id);
 
