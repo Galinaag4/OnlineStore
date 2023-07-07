@@ -1,34 +1,30 @@
 package com.example.onlinestore.security;
 
 import com.example.onlinestore.model.UserModel;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-
-public class UserPrincipal implements UserDetails {
-    private final UserModel user;
-
-    public UserPrincipal(UserModel user) {
-        this.user = user;
-    }
+@RequiredArgsConstructor
+public class UserDetailsCustom implements UserDetails {
+    private final UserModel userModel;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority grantedAuthority = new SimpleGrantedAuthority(user.getRole().name());
-        return List.of(grantedAuthority);
+        return List.of(new SimpleGrantedAuthority(userModel.getRole().name()));
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return userModel.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return userModel.getUsername();
     }
 
     @Override
@@ -49,4 +45,7 @@ public class UserPrincipal implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }}
+    }
+
+}
+

@@ -2,13 +2,10 @@ package com.example.onlinestore.controller;
 
 import com.example.onlinestore.dto.NewPassword;
 import com.example.onlinestore.dto.User;
-import com.example.onlinestore.mapper.UserMapper;
+import com.example.onlinestore.exception.PasswordChangeException;
 import com.example.onlinestore.model.ImageModel;
-import com.example.onlinestore.model.UserModel;
-import com.example.onlinestore.repository.UserRepository;
 import com.example.onlinestore.service.AuthService;
 import com.example.onlinestore.service.UserService;
-import com.example.onlinestore.service.impl.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -16,16 +13,16 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 
 @Slf4j
@@ -36,7 +33,8 @@ import java.io.IOException;
 @Tag(name = "Пользователи", description = "Методы работы с пользователем.")
 public class UserController {
 
-    private final UserServiceImpl userServiceImpl;
+    private final UserService userService;
+    private final AuthService authService;
     @Operation(summary = "Обновление пароля",
             tags = "Пользователи",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -60,13 +58,12 @@ public class UserController {
                     )
             })
     @PostMapping("/set_password")
-    public ResponseEntity<?> setPassword(@RequestBody NewPassword newPassword) {
-
-        if (userServiceImpl.setPassword(newPassword)) {
+    public ResponseEntity<NewPassword> setPassword(@RequestBody @Valid NewPassword newPassword, Authentication authentication) {
+        if (userService.setPassword(newPassword, authentication)) {
             return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-
     }
 
 
@@ -87,8 +84,8 @@ public class UserController {
                     )
             })
     @GetMapping("/me")
-    public ResponseEntity<User> getUser() {
-        return ResponseEntity.ok(userServiceImpl.getUser());
+    public ResponseEntity<User> getUser(@NotNull Authentication authentication) {
+        return ResponseEntity.ok(userService.getUser(authentication));
     }
 
     @Operation(summary = "Обновить информацию об авторизованном пользователе",
@@ -114,8 +111,9 @@ public class UserController {
                     )
             })
     @PatchMapping("/me")
-    public ResponseEntity<User> updateUser(@RequestBody User user) {
-        if (userServiceImpl.updateUser(user)) {
+
+    public ResponseEntity<User> updateUser(@RequestBody @Valid User user,Authentication authentication) {
+        if (userService.updateUser(user)) {
             return ResponseEntity.ok(user);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -142,13 +140,13 @@ public class UserController {
     @PatchMapping(value = "me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateUserImage(@RequestParam("image") MultipartFile file) throws IOException {
 
-        userServiceImpl.updateUserImage(file);
+        userService.updateUserImage(file);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/image/{id}/from-db")
     public ResponseEntity<byte[]> getUserImage(@PathVariable Integer id) {
-        ImageModel imageModel = userServiceImpl.getUserImage(id);
+        ImageModel imageModel = userService.getUserImage(id);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentLength(imageModel.getImage().length);
