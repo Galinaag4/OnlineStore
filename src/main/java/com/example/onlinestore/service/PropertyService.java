@@ -35,7 +35,6 @@ public class PropertyService {
         }
     }
 
-
     public boolean isThisUserOrAdmin(String username, UserModel userModel) {
         return isThisUser(username, userModel) || isAdmin(username);
     }

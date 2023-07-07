@@ -19,11 +19,10 @@ import static javax.persistence.GenerationType.IDENTITY;
 @ToString
 public class ImageModel {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue //(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Lob
     private byte[] image;
-
     @ToString.Exclude
     @OneToOne(fetch = FetchType.LAZY)
     private AdsModel adsModel;
@@ -32,11 +31,9 @@ public class ImageModel {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId (Integer id) {
         this.id = id;
     }
-
-
 
     public byte[] getImage() {
         return image;
@@ -45,8 +42,6 @@ public class ImageModel {
     public void setImage(byte[] image) {
         this.image = image;
     }
-
-
     public AdsModel getAdsModel() {
         return adsModel;
     }
@@ -54,6 +49,7 @@ public class ImageModel {
     public void setAdsModel(AdsModel adsModel) {
         this.adsModel = adsModel;
     }
+
 
 
 }

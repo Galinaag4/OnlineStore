@@ -7,6 +7,7 @@ import com.example.onlinestore.exception.AdsNotFoundException;
 import com.example.onlinestore.exception.CommentNotFoundException;
 import com.example.onlinestore.mapper.CommentMapper;
 import com.example.onlinestore.model.CommentModel;
+import com.example.onlinestore.model.ImageModel;
 import com.example.onlinestore.model.UserModel;
 import com.example.onlinestore.repository.AdsRepository;
 import com.example.onlinestore.repository.CommentRepository;
@@ -20,6 +21,12 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+/**
+ * Класс - сервис для работы с комментариями
+ *
+ * @see CommentModel
+ * @see CommentRepository
+ */
 @Slf4j
 @Service
 @Transactional
@@ -40,6 +47,16 @@ public class CommentService {
         this.propertyService = propertyService;
     }
 
+
+    /**
+     * Метод ищет и возвращает список всех комментариев к объявлению по id объявления
+     *
+     * @param id
+     * {@link CommentRepository#findAllByAdsModelId(Integer)}
+     * {@link CommentMapper#commentListToCommentDtoList(List)}
+     *
+     * @return  {@link ResponseWrapperComment}
+     */
     @Transactional(readOnly = true)
     public ResponseWrapperComment getComments(Integer id) {
         ResponseWrapperComment responseWrapperComment = new ResponseWrapperComment();
@@ -49,6 +66,17 @@ public class CommentService {
         return responseWrapperComment;
     }
 
+    /**
+     * Метод создает комментарий к объявлению по id объявления
+     *
+     * @param id,createComment
+     *
+     * {@link AdsRepository#findById(Object)}
+     * {@link UserRepository#findByUsername(String)}
+     * {@link CommentRepository#save(Object)}
+     *
+     * @return  {@link Comment}
+     */
     @Transactional
     public Comment addComment(Integer id, CreateComment createComment) {
         CommentModel commentModel = commentMapper.toCommentModel(createComment);
@@ -59,14 +87,37 @@ public class CommentService {
         return commentMapper.commentModelToComment(commentModel);
     }
 
+    /**
+     * Метод удаляет комментарий к объявлению по id объявления
+     *
+     * @param commentId
+     *
+     * {@link CommentRepository#deleteById(Object)}
+     */
     @Transactional
     public void deleteComment(Integer commentId) {
         commentRepository.deleteById(commentId);
     }
 
+    /**
+     * Метод редактирует комментарий к объявлению по id
+     *
+     * @param adId,commentId,comment,authentication
+     *
+     * {@link CommentRepository#findByAdsModel_IdAndId(Integer, Integer)}
+     * {@link PropertyService#isThisUserOrAdmin(String, UserModel)}
+     * {@link CommentRepository#save(Object)}
+     * {@link AdsRepository#save(Object)}
+     *
+     * @throws CommentNotFoundException если комментарий не найден
+     * @throws AdsNotFoundException если объявление не найдено
+     *
+     * @return  {@link Comment}
+     */
     @Transactional
     public Comment updateComment(Integer adId, Integer commentId, @NotNull Comment comment, Authentication authentication) {
-        CommentModel commentModel = commentRepository.findByAdsModel_IdAndId(adId, commentId).orElseThrow(CommentNotFoundException::new);
+        CommentModel commentModel = commentRepository.findByAdsModel_IdAndId(adId, commentId)
+                .orElseThrow(CommentNotFoundException::new);
         UserModel commentOwner = commentModel.getUserModel();
         if (propertyService.isThisUserOrAdmin(authentication.getName(), commentOwner)) {
             if (commentModel.getAdsModel().getId() != adId) {

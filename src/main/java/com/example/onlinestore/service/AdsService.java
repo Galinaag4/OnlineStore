@@ -24,30 +24,41 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Класс - сервис для работы с объявлениями
+ *
+ * @see AdsService
+ * @see AdsRepository
+ */
+
 @Slf4j
 @Service
 public class AdsService {
 
     private final AdsRepository adsRepository;
     private final ImageRepository imageRepository;
-    private final ImageService imageService;
     private final UserRepository userRepository;
     private final UserService userService;
     private final AdsMapper adsMapper;
-    private final CommentService commentService;
     private final PropertyService propertyService;
 
-    public AdsService(AdsRepository adsRepository, ImageRepository imageRepository, ImageService imageService, UserRepository userRepository, UserService userService, AdsMapper adsMapper, CommentService commentService, PropertyService propertyService) {
+    public AdsService(AdsRepository adsRepository, ImageRepository imageRepository,
+                      UserRepository userRepository, UserService userService, AdsMapper adsMapper,
+                      PropertyService propertyService) {
         this.adsRepository = adsRepository;
         this.imageRepository = imageRepository;
-        this.imageService = imageService;
         this.userRepository = userRepository;
         this.userService = userService;
         this.adsMapper = adsMapper;
-        this.commentService = commentService;
         this.propertyService = propertyService;
     }
 
+    /**
+     * Метод возвращает все объявления
+     * {@link AdsRepository#findAll()}
+     *
+     * @return  {@link ResponseWrapperAds}
+     */
     public ResponseWrapperAds getAllAds() {
         ResponseWrapperAds responseWrapperAds = new ResponseWrapperAds();
         List<AdsModel> adsList = adsRepository.findAll();
@@ -56,16 +67,34 @@ public class AdsService {
         return responseWrapperAds;
     }
 
+
+    /**
+     * Метод возвращает картинку объявления по id
+     *
+     * @param adsId
+     * {@link AdsRepository#findById(Object)}
+     *
+     * @return {@link ImageModel}
+     */
     @Transactional(readOnly = true)
     public ImageModel getAdImage(Integer adsId) {
         return adsRepository.findById(adsId).map(AdsModel::getImageModel).orElse(null);
     }
 
+    /**
+     * Метод создает объявление
+     *
+     * @param properties,file,authentication
+     * {@link AdsMapper#toAdsModel(CreateAds)}
+     * {@link ImageRepository#save(Object)}
+     * {@link AdsRepository#save(Object)}
+     *
+     * @return  {@link Ads}
+     */
     @Transactional
     public Ads addAd(CreateAds properties, MultipartFile file,Authentication authentication) throws IOException {
         AdsModel adsModel = adsMapper.toAdsModel(properties);
         ImageModel imageModel = new ImageModel();
-//        imageModel.setFileSize(file.getSize());
         imageModel.setImage(file.getBytes());
         imageRepository.save(imageModel);
         adsModel.setImageModel(imageModel);
@@ -73,21 +102,29 @@ public class AdsService {
         adsRepository.save(adsModel);
         return adsMapper.adsModelToAds(adsModel);
     }
-//    public Ads addAd(CreateAds properties, ImageModel image) {
-//        AdsModel adsModel = adsMapper.toAdsModel(properties);
-//        adsModel.setUserModel(userRepository.findByUsername(userService.getCurrentUsername()).orElseThrow(() -> new UsernameNotFoundException("User not found")));
-//        ImageModel imageModel;
-//        imageModel = imageService.save(image);
-//        adsModel.setImageModel(imageModel);
-//        adsRepository.saveAndFlush(adsModel);
-//        return adsMapper.adsModelToAds(adsModel);
-//    }
 
+
+    /**
+     * Метод возвращает все объявления по id
+     *
+     * @param id
+     * {@link AdsRepository#findById(Object)} ()}
+     *
+     * @return  {@link FullAds}
+     */
     @Transactional
     public FullAds getAds(Integer id) {
         return adsRepository.findById(id).map(adsMapper::toFullAdsDto).orElse(null);
     }
 
+
+    /**
+     * Метод ищет и возвращает список всех объявлений авторизированного пользователя
+     * {@link UserRepository#findByUsername(String)}
+     * {@link AdsRepository#findAllByUserModelId(Integer)}
+     *
+     * @return  {@link ResponseWrapperAds}
+     */
     @Transactional
     public ResponseWrapperAds getAdsMe() {
         ResponseWrapperAds responseWrapperAds = new ResponseWrapperAds();
@@ -98,33 +135,38 @@ public class AdsService {
         return responseWrapperAds;
     }
 
+
+    /**
+     * Метод удаляет объявление по id
+     *
+     * @param email,id
+     * {@link AdsRepository#deleteById(Object)}
+     * @throws AdsNotFoundException если объявление не найдено
+     */
     @Transactional
     public boolean removeAd(String email, int id) {
         AdsModel adsModel = adsRepository.findById(id).orElseThrow(AdsNotFoundException::new);
         UserModel userModel = adsModel.getUserModel();
-//        imageRepository.delete(adsRepository.findById(id).map(AdsModel::getImageModel).orElseThrow());
-//        commentService.deleteCommentsByAdId(id);
         if (propertyService.isThisUserOrAdmin(email, userModel)) {
-//            try {
-//                Files.deleteIfExists(Path.of(ads.getImage().getFilePath()));
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
             adsRepository.deleteById(id);
             return true;
         }
         return false;
     }
-//    public void removeAd(Integer id) {
-//        imageRepository.delete(adsRepository.findById(id).map(AdsModel::getImageModel).orElseThrow());
-//        commentService.deleteCommentsByAdId(id);
-//        adsRepository.deleteById(id);
-//    }
 
+    /**
+     * Метод меняет картинку объявления и сохраняет изменения в БД
+     *
+     * @param id,file
+     *
+     * {@link AdsRepository#findById(Object)}
+     * {@link ImageRepository#findById(Object)}
+     * {@link ImageRepository#save(Object)},
+     */
     @Transactional
     public void updateAdImage(Integer id, MultipartFile file) throws IOException {
         AdsModel adsModel = adsRepository.findById(id).orElseThrow();
         ImageModel imageModel = imageRepository.findById(adsModel.getId()).orElse(new ImageModel());
-//        imageModel.setFileSize(file.getSize());
         imageModel.setImage(file.getBytes());
         imageRepository.save(imageModel);
         adsModel.setImageModel(imageModel);

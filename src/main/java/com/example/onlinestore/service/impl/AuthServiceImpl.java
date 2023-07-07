@@ -14,29 +14,40 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 import com.example.onlinestore.dto.RegisterReq;
+
+/**
+ * Класс - сервис, содержащий реализацию интерфейса {@link AuthService}
+ *
+ * @see UserService
+ * @see PasswordEncoder
+ */
 @Log4j2
 @Service
 public class AuthServiceImpl implements AuthService {
 
-
-  private final UserRepository userRepository;
   private final UserService userService;
-
   private final PasswordEncoder passwordEncoder;
 
-  public AuthServiceImpl( UserRepository userRepository, UserService userService, PasswordEncoder passwordEncoder) {
-    this.userRepository = userRepository;
+  public AuthServiceImpl( UserService userService, PasswordEncoder passwordEncoder) {
     this.userService = userService;
     this.passwordEncoder = passwordEncoder;
   }
 
+  /**
+   * Метод производит авторизацию пользователя в системе
+   * @return {@link PasswordEncoder#matches(CharSequence, String)} )}
+   */
   @Override
   public boolean login(String userName, String password) {
-
     UserDetails userDetails = userService.loadUserByUsername(userName);
     return passwordEncoder.matches(password, userDetails.getPassword());
   }
 
+  /**
+   * Метод регистрирует пользователя в системе
+   *
+   * {@link UserService#createUser(RegisterReq)}
+   */
   @Override
   public boolean register(RegisterReq registerReq) {
     userService.createUser(registerReq);

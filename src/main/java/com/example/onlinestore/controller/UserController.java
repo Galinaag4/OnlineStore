@@ -5,6 +5,7 @@ import com.example.onlinestore.dto.User;
 import com.example.onlinestore.exception.PasswordChangeException;
 import com.example.onlinestore.model.ImageModel;
 import com.example.onlinestore.service.AuthService;
+import com.example.onlinestore.service.ImageService;
 import com.example.onlinestore.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -24,6 +25,12 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
+/**
+ * Класс - контроллер для работы с пользователем и его данными
+ *
+ * @see UserService
+ * @see ImageService
+*/
 
 @Slf4j
 @CrossOrigin(origins = "http://localhost:3000")
