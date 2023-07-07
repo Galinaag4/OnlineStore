@@ -48,6 +48,7 @@ public class UserService implements UserDetailsService {
     /**
      * Метод находит пользователя и возвращает его данные
      *
+     *
      * @param username
      *
      * {@link UserRepository#getUserByUsernameIgnoreCase(String)}
