@@ -30,15 +30,13 @@ public interface UserMapper {
     @Mapping(ignore = true, target = "userModel.username")
     void toUserModel(@MappingTarget UserModel userModel, User user);
 
-    @Mapping(target = "email", source = "username")
-    UserModel mapRegisterReqToUserModel(RegisterReq registerReq);
-
-//        userModel.setUsername(registerReq.getUsername());
-//        userModel.setPassword(registerReq.getPassword());
-//        userModel.setFirstName(registerReq.getFirstName());
-//        userModel.setLastName(registerReq.getLastName());
-//        userModel.setPhone(registerReq.getPhone());
-//        userModel.setRole(registerReq.getRole());
-//        return userModel;
-
+    public default UserModel mapRegisterReqToUserModel(RegisterReq registerReq, UserModel userModel) {
+        userModel.setUsername(registerReq.getUsername());
+        userModel.setPassword(registerReq.getPassword());
+        userModel.setFirstName(registerReq.getFirstName());
+        userModel.setLastName(registerReq.getLastName());
+        userModel.setPhone(registerReq.getPhone());
+        userModel.setRole(registerReq.getRole());
+        return userModel;
+    }
 }

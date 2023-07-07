@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,10 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.onlinestore.dto.LoginReq;
 import com.example.onlinestore.dto.RegisterReq;
-import com.example.onlinestore.dto.Role;
 import com.example.onlinestore.service.AuthService;
-
-import static com.example.onlinestore.dto.Role.USER;
 
 /**
  * Класс - контроллер для авторизации и регистрации пользователя
