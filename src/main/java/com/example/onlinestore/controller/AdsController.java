@@ -5,6 +5,8 @@ import com.example.onlinestore.model.ImageModel;
 
 import com.example.onlinestore.service.AdsService;
 import com.example.onlinestore.service.CommentService;
+import com.example.onlinestore.service.ImageService;
+import com.example.onlinestore.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -29,6 +31,13 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
+
+/**
+ * Класс - контроллер для работы с объявлениями и комментариями
+ *
+ * @see AdsService
+ * @see CommentService
+ */
 
 @Slf4j
 @CrossOrigin(origins = "http://localhost:3000")
