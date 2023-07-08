@@ -37,6 +37,8 @@ public class AdsService {
 
     private final AdsRepository adsRepository;
     private final ImageRepository imageRepository;
+
+    private final ImageService imageService;
     private final UserRepository userRepository;
     private final UserService userService;
     private final AdsMapper adsMapper;
@@ -44,13 +46,14 @@ public class AdsService {
 
     public AdsService(AdsRepository adsRepository, ImageRepository imageRepository,
                       UserRepository userRepository, UserService userService, AdsMapper adsMapper,
-                      PropertyService propertyService) {
+                      PropertyService propertyService, ImageService imageService) {
         this.adsRepository = adsRepository;
         this.imageRepository = imageRepository;
         this.userRepository = userRepository;
         this.userService = userService;
         this.adsMapper = adsMapper;
         this.propertyService = propertyService;
+        this.imageService = imageService;
     }
 
     /**
@@ -92,17 +95,18 @@ public class AdsService {
      * @return  {@link Ads}
      */
     @Transactional
-    public Ads addAd(CreateAds properties, MultipartFile file,Authentication authentication) throws IOException {
+    public Ads addAd (CreateAds properties, MultipartFile file, Authentication authentication) throws IOException {
         AdsModel adsModel = adsMapper.toAdsModel(properties);
         ImageModel imageModel = new ImageModel();
+
         imageModel.setImage(file.getBytes());
         imageRepository.save(imageModel);
+
         adsModel.setImageModel(imageModel);
-        adsModel.setUserModel(userRepository.findByUsername(authentication.getName()).orElseThrow(() -> new UsernameNotFoundException("User not found")));
+        adsModel.setUserModel(userRepository.findByUsername(userService.getCurrentUsername()).orElseThrow(() -> new UsernameNotFoundException("User not found")));
         adsRepository.save(adsModel);
         return adsMapper.adsModelToAds(adsModel);
     }
-
 
     /**
      * Метод возвращает все объявления по id
