@@ -90,7 +90,8 @@ public class AdsController {
                     )
             })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Ads> addAds(@NotNull Authentication authentication,@RequestPart("properties") CreateAds properties,
+    public ResponseEntity<Ads> addAds(@NotNull Authentication authentication,
+                                      @RequestPart("properties") CreateAds properties,
                                       @RequestPart("image") MultipartFile file) throws IOException {
         return ResponseEntity.ok(adsService.addAd(properties,file,authentication));
     }
@@ -407,6 +408,7 @@ public class AdsController {
                             description = "Forbidden"
                     )
             })
+
     @PatchMapping(value = "{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<byte[]> updateImage(@PathVariable Integer id, @RequestParam MultipartFile image) throws IOException{
         adsService.updateAdImage(id, image);

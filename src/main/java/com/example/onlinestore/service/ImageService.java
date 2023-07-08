@@ -1,6 +1,7 @@
 package com.example.onlinestore.service;
 
 import com.example.onlinestore.model.ImageModel;
+import com.example.onlinestore.repository.AdsRepository;
 import com.example.onlinestore.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +9,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.*;
+import java.io.IOException;
+
+/**
+ * Класс - сервис для работы с картинками
+ *
+ * @see ImageRepository
+ */
 
 @Slf4j
 @Service
@@ -20,26 +27,40 @@ public class ImageService {
     private final ImageRepository imageRepository;
 
 
-//    /**
-//     * Получение изображения с диска
-//     *
-//     * @param imageId  идентификатор сущности изображения
-//     * @param response ответ сервера
-//     * @throws {@link IOException}
-//     */
-//    public void transferImageToResponse(Integer imageId, HttpServletResponse response) throws IOException {
-//        Image imageDetails = imageRepository.findById(imageId).orElseThrow(ImageNotFountException::new);
-//        try (InputStream is = Files.newInputStream(imageDetails.getPath());
-//             OutputStream os = response.getOutputStream()) {
-//            response.setStatus(200);
-//            response.setContentType(imageDetails.getMediaType());
-//            response.setContentLength((int) imageDetails.getFileSize());
-//            is.transferTo(os);
-//        }
-//    }
-public ImageModel save(ImageModel image) {
-    return imageRepository.saveAndFlush(image);
-}
+    /**
+     * Метод сохраняет картинку в базу данных
+     *
+     * {@link ImageRepository#saveAndFlush(Object)}
+     *
+     * @return {@link ImageModel}
+     */
+    public ImageModel save(MultipartFile image) {
+        ImageModel newImageModel = new ImageModel();
+        try {
+            byte[] bytes = image.getBytes();
+            newImageModel.setImage(bytes);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return imageRepository.saveAndFlush(newImageModel);
+    }
+
+    /**
+     * Метод обновляет и сохраняет картинку в базу данных
+     *
+     * {@link ImageRepository#saveAndFlush(Object)}
+     *
+     * @return {@link ImageModel}
+     */
+    public ImageModel updateImage(MultipartFile newImage, ImageModel oldImageModel) {
+        try {
+            byte[] bytes = newImage.getBytes();
+            oldImageModel.setImage(bytes);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return imageRepository.saveAndFlush(oldImageModel);
+    }
 
     @Transactional(readOnly = true)
     public ImageModel read(int id) {
@@ -94,6 +115,24 @@ public ImageModel save(ImageModel image) {
 //        imageDetails.se(imageFile.getSize());
 //        imageDetails.setMediaType(imageFile.getContentType());
 //        return imageRepository.saveAndFlush(imageDetails);
+//    }
+
+    //    /**
+//     * Получение изображения с диска
+//     *
+//     * @param imageId  идентификатор сущности изображения
+//     * @param response ответ сервера
+//     * @throws {@link IOException}
+//     */
+//    public void transferImageToResponse(Integer imageId, HttpServletResponse response) throws IOException {
+//        Image imageDetails = imageRepository.findById(imageId).orElseThrow(ImageNotFountException::new);
+//        try (InputStream is = Files.newInputStream(imageDetails.getPath());
+//             OutputStream os = response.getOutputStream()) {
+//            response.setStatus(200);
+//            response.setContentType(imageDetails.getMediaType());
+//            response.setContentLength((int) imageDetails.getFileSize());
+//            is.transferTo(os);
+//        }
 //    }
 }
 

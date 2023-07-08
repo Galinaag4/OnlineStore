@@ -35,11 +35,14 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final ImageRepository imageRepository;
+    private final ImageService imageService;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
-    public UserService(UserRepository userRepository, ImageRepository imageRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
+    public UserService(UserRepository userRepository, ImageRepository imageRepository,
+                       ImageService imageService, PasswordEncoder passwordEncoder, UserMapper userMapper) {
         this.userRepository = userRepository;
+        this.imageService = imageService;
         this.imageRepository = imageRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
@@ -193,5 +196,19 @@ public class UserService implements UserDetailsService {
         image.setImage(file.getBytes());
         imageRepository.save(image);
         user.setImageModel((image));
+    }
+
+    /**
+     * Метод достает сущность UserModel из базы данных
+     *
+     * @param authentication
+     * {@link UserRepository#findByUsername(String)}
+     * @throws NotFoundUserException если пользователь не найден
+     *
+     * @return {@link UserModel}
+     */
+    public UserModel getUserModel(Authentication authentication) throws NotFoundUserException {
+        String username = authentication.getName();
+        return userRepository.findByUsername(username).orElseThrow(NotFoundUserException::new);
     }
 }
