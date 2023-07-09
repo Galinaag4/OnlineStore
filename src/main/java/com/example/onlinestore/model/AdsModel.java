@@ -30,6 +30,7 @@ public class AdsModel {
     @Column(name = "description")
     private String description;
 
+
     @ToString.Exclude
     @OneToOne(mappedBy = "adsModel", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private ImageModel imageModel;

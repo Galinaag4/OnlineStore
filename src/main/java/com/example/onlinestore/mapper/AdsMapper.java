@@ -13,6 +13,7 @@ import java.util.List;
 @Component
 @Mapper(componentModel = "spring")
 public interface AdsMapper {
+
     AdsModel toAdsModel(CreateAds createAds);
     @Mapping(target = "pk", source = "id")
     @Mapping(target = "author", source = "userModel.id")

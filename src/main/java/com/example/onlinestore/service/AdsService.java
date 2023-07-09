@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -97,14 +98,13 @@ public class AdsService {
     @Transactional
     public Ads addAd (CreateAds properties, MultipartFile file, Authentication authentication) throws IOException {
         AdsModel adsModel = adsMapper.toAdsModel(properties);
+        adsModel.setUserModel(userRepository.findByUsername(authentication.getName()).orElseThrow(() -> new UsernameNotFoundException("User not found")));
+        adsRepository.save(adsModel);
         ImageModel imageModel = new ImageModel();
-
         imageModel.setImage(file.getBytes());
+        imageModel.setAdsModel(adsModel);
         imageRepository.save(imageModel);
 
-        adsModel.setImageModel(imageModel);
-        adsModel.setUserModel(userRepository.findByUsername(userService.getCurrentUsername()).orElseThrow(() -> new UsernameNotFoundException("User not found")));
-        adsRepository.save(adsModel);
         return adsMapper.adsModelToAds(adsModel);
     }
 
@@ -158,6 +158,9 @@ public class AdsService {
         return false;
     }
 
+
+
+
     /**
      * Метод меняет картинку объявления и сохраняет изменения в БД
      *
@@ -168,12 +171,25 @@ public class AdsService {
      * {@link ImageRepository#save(Object)},
      */
     @Transactional
-    public void updateAdImage(Integer id, MultipartFile file) throws IOException {
+    public byte[] updateAdImage(Integer id, MultipartFile file) throws IOException {
+
+//        imageRepository.deleteImageModelsByAdsModel_Id(id);
         AdsModel adsModel = adsRepository.findById(id).orElseThrow();
-        ImageModel imageModel = imageRepository.findById(adsModel.getId()).orElse(new ImageModel());
-        imageModel.setImage(file.getBytes());
-        imageRepository.save(imageModel);
-        adsModel.setImageModel(imageModel);
+        ImageModel imageToSave = adsModel.getImageModel();
+imageToSave.setImage(file.getBytes());
+
+        imageToSave.setAdsModel(adsModel);
+
+        imageRepository.save(imageToSave);
+        return imageToSave.getImage();
+
+//        AdsModel adsModel = adsRepository.findById(id).orElseThrow();
+//        ImageModel imageModel = imageRepository.findById(adsModel.getId()).orElse(new ImageModel());
+//        imageModel.setImage(file.getBytes());
+//        imageRepository.save(imageModel);
+//        adsModel.setImageModel(imageModel);
+
+
     }
 
     @Transactional
