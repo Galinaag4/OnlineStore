@@ -82,7 +82,8 @@ public class AdsService {
      */
     @Transactional(readOnly = true)
     public ImageModel getAdImage(Integer adsId) {
-        return adsRepository.findById(adsId).map(AdsModel::getImageModel).orElse(null);
+        AdsModel ads = adsRepository.findById(adsId).orElse(null);
+        return ads.getImageModel();
     }
 
     /**

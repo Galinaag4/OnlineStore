@@ -17,16 +17,16 @@ public interface CommentMapper {
     @Mapping(target = "pk", source = "id")
     @Mapping(target = "author", source = "userModel.id")
     @Mapping(target = "authorFirstName", source = "userModel.firstName")
-    @Mapping(target = "authorImage", expression = "java(getImageModel(comment))")
+    @Mapping(target = "authorImage", expression = "java(getImageModel(commentModel))")
 
 
     Comment commentModelToComment (CommentModel commentModel);
 
-    default String getImageModel(Comment commentModel) {
-        if (commentModel.getAuthorImage() == null) {
+    default String getImageModel(CommentModel commentModel) {
+        if (commentModel.getUserModel().getImageModel() == null) {
             return null;
         }
-        return "/users/image/" + commentModel.getAuthor() + "/from-db";
+        return "/users/image/" + commentModel.getUserModel().getId() + "/from-db";
     }
 
 
