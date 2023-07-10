@@ -5,9 +5,9 @@ import lombok.Data;
 import java.util.Collection;
 
 @Data
-public class ResponseWrapperComment<C> {
+public class ResponseWrapperComment {
     private  int count;
-    private  Collection<C> results;
+    private  Collection<Comment> results;
 
     public ResponseWrapperComment() {
     }
