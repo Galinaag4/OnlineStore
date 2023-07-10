@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -78,11 +79,11 @@ public class CommentService {
      * @return  {@link Comment}
      */
     @Transactional
-    public Comment addComment(Integer id, CreateComment createComment) {
+    public Comment addComment(Integer id, CreateComment createComment, Authentication authentication) {
         CommentModel commentModel = commentMapper.toCommentModel(createComment);
         commentModel.setAdsModel(adsRepository.findById(id).orElse(null));
-        commentModel.setUserModel(userRepository.findByUsername(userService.getCurrentUsername()).orElseThrow(() -> new UsernameNotFoundException("User not found")));
-        commentModel.setCreatedAt(System.currentTimeMillis());
+        commentModel.setUserModel(userRepository.findByUsername(authentication.getName()).orElseThrow(() -> new UsernameNotFoundException("User not found")));
+        commentModel.setCreatedAt(LocalDateTime.now().toString());
         commentRepository.save(commentModel);
         return commentMapper.commentModelToComment(commentModel);
     }

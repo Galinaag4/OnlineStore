@@ -20,7 +20,7 @@ public class CommentModel {
     @Column(name = "id")
     private Integer id;
     @Column(name = "created_at")
-    private Long createdAt;
+    private String createdAt;
     @Column(name = "text")
     private String text;
     @ManyToOne
@@ -41,11 +41,11 @@ public class CommentModel {
     }
 
 
-    public Long getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Long createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 
