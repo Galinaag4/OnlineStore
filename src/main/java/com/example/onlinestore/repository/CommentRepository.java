@@ -16,4 +16,5 @@ public interface CommentRepository extends JpaRepository <CommentModel, Integer>
 
     Optional<CommentModel> findByAdsModel_IdAndId(Integer adsModelId, Integer commentId);
 
+    void  deleteAllByAdsModel_Id (Integer id);
 }

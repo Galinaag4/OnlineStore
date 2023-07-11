@@ -10,6 +10,7 @@ import com.example.onlinestore.model.AdsModel;
 import com.example.onlinestore.model.ImageModel;
 import com.example.onlinestore.model.UserModel;
 import com.example.onlinestore.repository.AdsRepository;
+import com.example.onlinestore.repository.CommentRepository;
 import com.example.onlinestore.repository.ImageRepository;
 import com.example.onlinestore.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -44,10 +45,12 @@ public class AdsService {
     private final UserService userService;
     private final AdsMapper adsMapper;
     private final PropertyService propertyService;
+    private final CommentRepository commentRepository;
+
 
     public AdsService(AdsRepository adsRepository, ImageRepository imageRepository,
                       UserRepository userRepository, UserService userService, AdsMapper adsMapper,
-                      PropertyService propertyService, ImageService imageService) {
+                      PropertyService propertyService, ImageService imageService, CommentRepository commentRepository) {
         this.adsRepository = adsRepository;
         this.imageRepository = imageRepository;
         this.userRepository = userRepository;
@@ -55,6 +58,7 @@ public class AdsService {
         this.adsMapper = adsMapper;
         this.propertyService = propertyService;
         this.imageService = imageService;
+        this.commentRepository = commentRepository;
     }
 
     /**
@@ -153,7 +157,8 @@ public class AdsService {
         AdsModel adsModel = adsRepository.findById(id).orElseThrow(AdsNotFoundException::new);
         UserModel userModel = adsModel.getUserModel();
         if (propertyService.isThisUserOrAdmin(email, userModel)) {
-            adsRepository.deleteById(id);
+            commentRepository.deleteAllByAdsModel_Id(id);
+            adsRepository.deleteAllById(id);
             return true;
         }
         return false;

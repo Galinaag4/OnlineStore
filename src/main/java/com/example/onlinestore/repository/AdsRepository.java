@@ -16,6 +16,7 @@ public interface AdsRepository extends JpaRepository <AdsModel, Integer> {
     List<AdsModel> findAllAds();
     List<AdsModel> findAllByUserModelId(Integer userModelId);
 
+    void deleteAllById(Integer adsId);
     List<AdsModel> findByTitleContainingIgnoreCaseOrderByTitle(String title);
 
 }
