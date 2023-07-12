@@ -49,7 +49,7 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * Метод находит пользователя и возвращает его данные
+     * Метод находит пользователя по email ( username) и возвращает его данные
      *
      *
      * @param username
@@ -63,7 +63,7 @@ public class UserService implements UserDetailsService {
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<UserModel> optionalUser = userRepository.getUserByUsernameIgnoreCase(username);
-        if (optionalUser.isPresent()) {
+        if (!optionalUser.isEmpty()) {
             UserModel userModel = optionalUser.get();
             return new UserDetailsCustom(userModel);
         } else {
