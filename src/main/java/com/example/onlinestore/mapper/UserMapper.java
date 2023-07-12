@@ -1,6 +1,7 @@
 package com.example.onlinestore.mapper;
 
 import com.example.onlinestore.dto.RegisterReq;
+import com.example.onlinestore.dto.Role;
 import com.example.onlinestore.dto.User;
 import com.example.onlinestore.model.UserModel;
 import org.mapstruct.*;
@@ -30,13 +31,14 @@ public interface UserMapper {
     @Mapping(ignore = true, target = "userModel.username")
     void toUserModel(@MappingTarget UserModel userModel, User user);
 
-    public default UserModel mapRegisterReqToUserModel(RegisterReq registerReq, UserModel userModel) {
+    public default UserModel mapRegisterReqToUserModel(RegisterReq registerReq) {
+        UserModel userModel = new UserModel();
         userModel.setUsername(registerReq.getUsername());
         userModel.setPassword(registerReq.getPassword());
         userModel.setFirstName(registerReq.getFirstName());
         userModel.setLastName(registerReq.getLastName());
         userModel.setPhone(registerReq.getPhone());
-        userModel.setRole(registerReq.getRole());
+        userModel.setRole(Role.USER);
         return userModel;
     }
 }
