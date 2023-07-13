@@ -1,5 +1,6 @@
 package com.example.onlinestore.service;
 
+import com.example.onlinestore.exception.ImageNotFoundException;
 import com.example.onlinestore.model.ImageModel;
 import com.example.onlinestore.repository.AdsRepository;
 import com.example.onlinestore.repository.ImageRepository;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * Класс - сервис для работы с картинками
@@ -34,7 +36,7 @@ public class ImageService {
      *
      * @return {@link ImageModel}
      */
-    public ImageModel save(MultipartFile image) {
+    public ImageModel save (MultipartFile image) {
         ImageModel newImageModel = new ImageModel();
         try {
             byte[] bytes = image.getBytes();
@@ -62,11 +64,48 @@ public class ImageService {
         return imageRepository.saveAndFlush(oldImageModel);
     }
 
-    @Transactional(readOnly = true)
-    public ImageModel read(int id) {
-        return imageRepository.findById(id)
-                .orElse(null);
+    /**
+     * Метод достает картинку из БД по ее id
+     *
+     * @param id
+     * {@link ImageRepository#findById(Object)}
+     *
+     * @throws ImageNotFoundException если картинка не найдена
+     * @return {@link Byte}
+     */
+    public byte[] getImageById(Integer id) {
+        ImageModel imageModel = imageRepository.findById(id).orElseThrow(ImageNotFoundException::new);
+        return imageModel.getImage();
     }
+
+    /**
+     * Метод достает Optional из БД по ее id
+     *
+     * @param id {@link ImageRepository#findById(Object)}
+     * @return {@link Optional}
+     */
+    public Optional<ImageModel> findImageModelId(Integer id) {
+        return imageRepository.findById(id);
+    }
+
+    /**
+     * Метод удаляет картинку из БД
+     *
+     * @param imageModel
+     *
+     * {@link ImageRepository#delete(Object)}
+     */
+    public void deleteImage (ImageModel imageModel) {
+        imageRepository.delete(imageModel);
+    }
+
+
+
+//    @Transactional(readOnly = true)
+//    public ImageModel read(int id) {
+//        return imageRepository.findById(id)
+//                .orElse(null);
+//    }
 
 
 //    public Image saveImageFile(MultipartFile imageFile) throws IOException {

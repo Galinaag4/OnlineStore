@@ -37,6 +37,7 @@ import java.io.IOException;
  *
  * @see AdsService
  * @see CommentService
+ * @see ImageService
  */
 
 @Slf4j
@@ -48,6 +49,7 @@ import java.io.IOException;
 public class AdsController {
     private final AdsService adsService;
     private final CommentService commentService;
+    private final ImageService imageService;
 
 
     @Operation(summary = "Получить все объявления",
@@ -427,5 +429,22 @@ public class AdsController {
         headers.setContentLength(imageModel.getImage().length);//гет image или гет image byte
 
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(imageModel.getImage());
+    }
+
+    @Operation(summary = "Получить картинку объявления",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                            mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
+                            schema = @Schema(implementation = ImageModel.class))),
+                    @ApiResponse (responseCode = "404", description = "Image Not Found")
+            },
+            tags = "Ads"
+            )
+    @GetMapping(value = "/{id}/image", produces = {MediaType.IMAGE_PNG_VALUE,
+            MediaType.IMAGE_JPEG_VALUE,
+            MediaType.IMAGE_GIF_VALUE, "image/*"})
+    public ResponseEntity<byte[]> getImage(@PathVariable("id") Integer id) {
+
+        return ResponseEntity.ok(imageService.getImageById(id));
     }
 }

@@ -49,7 +49,7 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * Метод находит пользователя по email ( username) и возвращает его данные
+     * Метод находит пользователя по email (username) и возвращает его данные
      *
      *
      * @param username
