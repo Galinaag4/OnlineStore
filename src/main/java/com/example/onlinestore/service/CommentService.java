@@ -3,6 +3,8 @@ package com.example.onlinestore.service;
 import com.example.onlinestore.dto.Comment;
 import com.example.onlinestore.dto.CreateComment;
 import com.example.onlinestore.dto.ResponseWrapperComment;
+import com.example.onlinestore.dto.Role;
+import com.example.onlinestore.exception.AccessDeniedException;
 import com.example.onlinestore.exception.AdsNotFoundException;
 import com.example.onlinestore.exception.CommentNotFoundException;
 import com.example.onlinestore.mapper.CommentMapper;
@@ -91,14 +93,25 @@ public class CommentService {
     /**
      * Метод удаляет комментарий к объявлению по id объявления
      *
-     * @param commentId
+     * @param commentId,adId,authentication
      *
-     * {@link CommentRepository#deleteById(Object)}
+     * {@link CommentRepository#findByAdsModel_IdAndId(Integer, Integer)}
+     * {@link CommentRepository#delete(Object)}
+     *
+     * @throws AccessDeniedException если нет доступа к удалению объявления
      */
     @Transactional
-    public void deleteComment(Integer commentId) {
-        commentRepository.deleteById(commentId);
+    public void deleteComment(Integer adId, Integer commentId, Authentication authentication) {
+//        commentRepository.deleteById(commentId);
+        if (checkRights(commentId, authentication)) {
+            CommentModel commentModel = commentRepository.findByAdsModel_IdAndId(adId, commentId)
+                    .orElseThrow(CommentNotFoundException::new);
+            commentRepository.delete(commentModel);
+        } else {
+            throw new AccessDeniedException();
+        }
     }
+
 
     /**
      * Метод редактирует комментарий к объявлению по id
@@ -130,6 +143,25 @@ public class CommentService {
             return commentMapper.commentModelToComment(commentModel);
         }
         return comment;
+    }
+
+    /**
+     * Метод проверяет наличие доступа к редактированию или удалению комментария по id
+     *
+     * @param id,authentication
+     *
+     * {@link CommentRepository#findById(Object)}
+     * {@link UserService#getUserModel(Authentication)}
+     *
+     * @throws CommentNotFoundException если комментарий не найден
+     */
+    public boolean checkRights (Integer id, Authentication authentication) {
+        CommentModel commentModel = commentRepository.findById(id).orElseThrow(CommentNotFoundException::new);
+        UserModel currentUser = userService.getUserModel(authentication);
+        String userModelCommentLogin = commentModel.getUserModel().getUsername();
+        Role currentUserRole = currentUser.getRole();
+        String currentUserLogin = authentication.getName();
+        return userModelCommentLogin.equals(currentUserLogin) || currentUserRole == Role.ADMIN;
     }
 
 }
