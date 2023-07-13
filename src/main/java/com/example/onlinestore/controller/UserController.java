@@ -150,13 +150,25 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/image/{id}/from-db")
-    public ResponseEntity<byte[]> getUserImage(@PathVariable Integer id) {
+
+    @Operation (
+            summary = "Получить аватар пользователя",
+            responses = {
+                    @ApiResponse (responseCode = "200", description = "OK", content = @Content (
+                            mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
+                            schema = @Schema (implementation = UserService.class))),
+                    @ApiResponse (responseCode = "404", description = "Image Not Found")
+            },
+            tags = "User"
+    )
+    @GetMapping(value = "/image/{id}/from-db", produces =  {MediaType.IMAGE_PNG_VALUE,
+                                                              MediaType.IMAGE_JPEG_VALUE,
+                                                              MediaType.IMAGE_GIF_VALUE})
+    public ResponseEntity<byte[]> getUserImage (@PathVariable Integer id) {
         ImageModel imageModel = userService.getUserImage(id);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentLength(imageModel.getImage().length);
-
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(imageModel.getImage());
     }
 }
