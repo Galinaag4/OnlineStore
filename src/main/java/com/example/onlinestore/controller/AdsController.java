@@ -2,11 +2,9 @@ package com.example.onlinestore.controller;
 
 import com.example.onlinestore.dto.*;
 import com.example.onlinestore.model.ImageModel;
-
 import com.example.onlinestore.service.AdsService;
 import com.example.onlinestore.service.CommentService;
 import com.example.onlinestore.service.ImageService;
-import com.example.onlinestore.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -17,18 +15,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 
@@ -95,7 +90,7 @@ public class AdsController {
     public ResponseEntity<Ads> addAds(@NotNull Authentication authentication,
                                       @RequestPart("properties") CreateAds properties,
                                       @RequestPart("image") MultipartFile file) throws IOException {
-        return ResponseEntity.ok(adsService.addAd(properties,file,authentication));
+        return ResponseEntity.ok(adsService.addAd(properties, file, authentication));
     }
 
     @Operation(summary = "Получить комментарии объявления",
@@ -347,9 +342,9 @@ public class AdsController {
             })
     @PatchMapping("{adId}/comments/{commentId}")
     public ResponseEntity<Comment> updateComment(Authentication authentication,
-                                                     @PathVariable("adId") Integer adId,
-                                                     @PathVariable("commentId") Integer commentId,
-                                                     @Valid @RequestBody Comment comment) {
+                                                 @PathVariable("adId") Integer adId,
+                                                 @PathVariable("commentId") Integer commentId,
+                                                 @Valid @RequestBody Comment comment) {
         Comment comment1 = commentService.updateComment(adId, commentId, comment, authentication);
         if (comment1 != null) {
             return ResponseEntity.ok(comment1);
@@ -415,20 +410,9 @@ public class AdsController {
             })
 
     @PatchMapping(value = "{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<byte[]> updateImage(@PathVariable Integer id, @RequestParam MultipartFile image) throws IOException{
+    public ResponseEntity<byte[]> updateImage(@PathVariable Integer id, @RequestParam MultipartFile image) throws IOException {
         adsService.updateAdImage(id, image);
         return ResponseEntity.ok().build();
-    }
-
-
-    @GetMapping("/image/{id}/from-db")
-    public ResponseEntity<byte[]> getAdImage(@PathVariable Integer id) {
-       ImageModel imageModel = adsService.getAdImage(id);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentLength(imageModel.getImage().length);//гет image или гет image byte
-
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(imageModel.getImage());
     }
 
     @Operation(summary = "Получить картинку объявления",
@@ -436,15 +420,17 @@ public class AdsController {
                     @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                             mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
                             schema = @Schema(implementation = ImageModel.class))),
-                    @ApiResponse (responseCode = "404", description = "Image Not Found")
+                    @ApiResponse(responseCode = "404", description = "Image Not Found")
             },
             tags = "Ads"
-            )
-    @GetMapping(value = "/{id}/image", produces = {MediaType.IMAGE_PNG_VALUE,
+    )
+    @GetMapping(value = "/image/{id}/from-db", produces = {MediaType.IMAGE_PNG_VALUE,
             MediaType.IMAGE_JPEG_VALUE,
-            MediaType.IMAGE_GIF_VALUE, "image/*"})
-    public ResponseEntity<byte[]> getImage(@PathVariable("id") Integer id) {
-
-        return ResponseEntity.ok(imageService.getImageById(id));
+            MediaType.IMAGE_GIF_VALUE})
+    public ResponseEntity<byte[]> getAdImage(@PathVariable Integer id) {
+        ImageModel imageModel = adsService.getAdImage(id);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentLength(imageModel.getImage().length);//гет image или гет image byte
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(imageModel.getImage());
     }
 }

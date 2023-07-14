@@ -20,9 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.*;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,7 +63,7 @@ public class AdsService {
      * Метод возвращает все объявления
      * {@link AdsRepository#findAll()}
      *
-     * @return  {@link ResponseWrapperAds}
+     * @return {@link ResponseWrapperAds}
      */
     public ResponseWrapperAds getAllAds() {
         ResponseWrapperAds responseWrapperAds = new ResponseWrapperAds();
@@ -79,9 +77,7 @@ public class AdsService {
     /**
      * Метод возвращает картинку объявления по id
      *
-     * @param adsId
-     * {@link AdsRepository#findById(Object)}
-     *
+     * @param adsId {@link AdsRepository#findById(Object)}
      * @return {@link ImageModel}
      */
     @Transactional(readOnly = true)
@@ -93,15 +89,13 @@ public class AdsService {
     /**
      * Метод создает объявление
      *
-     * @param properties,file,authentication
-     * {@link AdsMapper#toAdsModel(CreateAds)}
-     * {@link ImageRepository#save(Object)}
-     * {@link AdsRepository#save(Object)}
-     *
-     * @return  {@link Ads}
+     * @param properties,file,authentication {@link AdsMapper#toAdsModel(CreateAds)}
+     *                                       {@link ImageRepository#save(Object)}
+     *                                       {@link AdsRepository#save(Object)}
+     * @return {@link Ads}
      */
     @Transactional
-    public Ads addAd (CreateAds properties, MultipartFile file, Authentication authentication) throws IOException {
+    public Ads addAd(CreateAds properties, MultipartFile file, Authentication authentication) throws IOException {
         AdsModel adsModel = adsMapper.toAdsModel(properties);
         adsModel.setUserModel(userRepository.findByUsername(authentication.getName()).orElseThrow(() -> new UsernameNotFoundException("User not found")));
         adsRepository.save(adsModel);
@@ -116,10 +110,8 @@ public class AdsService {
     /**
      * Метод возвращает все объявления по id
      *
-     * @param id
-     * {@link AdsRepository#findById(Object)} ()}
-     *
-     * @return  {@link FullAds}
+     * @param id {@link AdsRepository#findById(Object)} ()}
+     * @return {@link FullAds}
      */
     @Transactional
     public FullAds getAds(Integer id) {
@@ -132,7 +124,7 @@ public class AdsService {
      * {@link UserRepository#findByUsername(String)}
      * {@link AdsRepository#findAllByUserModelId(Integer)}
      *
-     * @return  {@link ResponseWrapperAds}
+     * @return {@link ResponseWrapperAds}
      */
     @Transactional
     public ResponseWrapperAds getAdsMe() {
@@ -148,8 +140,7 @@ public class AdsService {
     /**
      * Метод удаляет объявление по id
      *
-     * @param email,id
-     * {@link AdsRepository#deleteById(Object)}
+     * @param email,id {@link AdsRepository#deleteById(Object)}
      * @throws AdsNotFoundException если объявление не найдено
      */
     @Transactional
@@ -164,38 +155,22 @@ public class AdsService {
         return false;
     }
 
-
-
-
     /**
      * Метод меняет картинку объявления и сохраняет изменения в БД
      *
-     * @param id,file
-     *
-     * {@link AdsRepository#findById(Object)}
-     * {@link ImageRepository#findById(Object)}
-     * {@link ImageRepository#save(Object)},
+     * @param id,file {@link AdsRepository#findById(Object)}
+     *                {@link ImageRepository#findById(Object)}
+     *                {@link ImageRepository#save(Object)},
      */
     @Transactional
     public byte[] updateAdImage(Integer id, MultipartFile file) throws IOException {
 
-//        imageRepository.deleteImageModelsByAdsModel_Id(id);
         AdsModel adsModel = adsRepository.findById(id).orElseThrow();
         ImageModel imageToSave = adsModel.getImageModel();
-imageToSave.setImage(file.getBytes());
-
+        imageToSave.setImage(file.getBytes());
         imageToSave.setAdsModel(adsModel);
-
         imageRepository.save(imageToSave);
         return imageToSave.getImage();
-
-//        AdsModel adsModel = adsRepository.findById(id).orElseThrow();
-//        ImageModel imageModel = imageRepository.findById(adsModel.getId()).orElse(new ImageModel());
-//        imageModel.setImage(file.getBytes());
-//        imageRepository.save(imageModel);
-//        adsModel.setImageModel(imageModel);
-
-
     }
 
     @Transactional
