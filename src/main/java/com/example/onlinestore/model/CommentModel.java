@@ -28,7 +28,7 @@ public class CommentModel {
      * "время создания комментария"
      */
     @Column(name = "created_at")
-    private String createdAt;
+    private LocalDateTime createdAt;
     /**
      * "текст комментария"
      */
@@ -58,11 +58,11 @@ public class CommentModel {
     }
 
 
-    public String getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
