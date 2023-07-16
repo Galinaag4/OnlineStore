@@ -6,7 +6,9 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-
+/**
+ * Class of CommentModel (комментарий в объявлениях).
+ */
 @Entity
 @Data
 @Table(name = "comments")
@@ -15,17 +17,31 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 @ToString
 public class CommentModel {
-
+    /**
+     * "id комментария"
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
+    /**
+     * "время создания комментария"
+     */
     @Column(name = "created_at")
     private String createdAt;
+    /**
+     * "текст комментария"
+     */
     @Column(name = "text")
     private String text;
+    /**
+     * "автор комментария"
+     */
     @ManyToOne
     private UserModel userModel;
+    /**
+     * "объявление"
+     */
     @ManyToOne
     private AdsModel adsModel;
 

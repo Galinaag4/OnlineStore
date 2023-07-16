@@ -7,6 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+/**
+ * Repository ImageRepository (image/изображение).
+ */
 @Repository
 public interface ImageRepository extends JpaRepository<ImageModel,Integer> {
 

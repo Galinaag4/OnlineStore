@@ -9,6 +9,9 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+/**
+ * Interface of user mapper
+ */
 @Component
 @Mapper(componentModel = "spring")
 public interface UserMapper {

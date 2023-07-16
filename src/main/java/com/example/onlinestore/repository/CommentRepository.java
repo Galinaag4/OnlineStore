@@ -9,7 +9,9 @@ import com.example.onlinestore.model.CommentModel;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-
+/**
+ * Repository CommentRepository (comment/комментарий).
+ */
 @Repository
 public interface CommentRepository extends JpaRepository <CommentModel, Integer> {
     List<CommentModel> findAllByAdsModelId(Integer adsModelId);

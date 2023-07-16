@@ -12,7 +12,9 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
-
+/**
+ * Class of UserModel (пользователь).
+ */
 @Entity
 @Data
 @NoArgsConstructor
@@ -23,29 +25,49 @@ import java.util.Set;
 @EqualsAndHashCode
 @ToString
 public class UserModel  {
+    /**
+     * "id пользователя"
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
     @Column(name = "userName")
     private String username;
-
+    /**
+     * "имя"
+     */
     @Column(name = "first_name")
     private String firstName;
-
+    /**
+     * "фамилия"
+     */
     @Column(name = "last_name")
     private String lastName;
-
+    /**
+     * "номер телефона"
+     */
     @Column(name = "phone")
     private String phone;
+    /**
+     * "тип пользователя" (USER, ADMIN)
+     */
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role;
+    /**
+     * "пароль пользователя"
+     */
     @Column(name = "password")
     private String password;
+    /**
+     * "изображение пользователя"
+     */
     @OneToOne
     private ImageModel imageModel;
-
+    /**
+     * "объявления пользователя"
+     */
     @ToString.Exclude
     @OneToMany(mappedBy = "userModel",fetch = FetchType.LAZY)
     private Set<AdsModel> adsModels;
