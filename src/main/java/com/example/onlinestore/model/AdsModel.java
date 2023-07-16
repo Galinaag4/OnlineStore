@@ -3,7 +3,9 @@ package com.example.onlinestore.model;
 import lombok.*;
 
 import javax.persistence.*;
-
+/**
+ * Class of AdsModel (объявление).
+ */
 @Entity
 @Data
 @Table(name = "ads")
@@ -12,25 +14,39 @@ import javax.persistence.*;
 @EqualsAndHashCode
 @ToString
 public class AdsModel {
+    /**
+     * "id объявления"
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    /**
+     * "автор объявления"
+     */
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private UserModel userModel;
-
+    /**
+     * "заголовок объявления"
+     */
     @Column(name = "title")
     private String title;
 
-
+    /**
+     * "цена товара"
+     */
     @Column(name = "price")
     private int price;
-
+    /**
+     * "описание товара"
+     */
     @Column(name = "description")
     private String description;
 
-
+    /**
+     * "изображение товара"
+     */
     @ToString.Exclude
     @OneToOne(mappedBy = "adsModel", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private ImageModel imageModel;

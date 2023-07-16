@@ -7,7 +7,9 @@ import com.example.onlinestore.model.UserModel;
 
 import java.util.List;
 import java.util.Optional;
-
+/**
+ * Repository UserRepository (users/пользователь).
+ */
 @Repository
 public interface UserRepository extends JpaRepository <UserModel, Integer>{
     @Query(value = "select * from users order by id", nativeQuery = true)

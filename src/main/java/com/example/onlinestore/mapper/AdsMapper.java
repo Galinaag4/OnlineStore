@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.List;
+/**
+ * Interface of ads mapper
+ */
 @Component
 @Mapper(componentModel = "spring")
 public interface AdsMapper {

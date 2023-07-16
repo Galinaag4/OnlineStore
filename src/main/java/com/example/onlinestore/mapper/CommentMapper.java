@@ -8,6 +8,9 @@ import org.mapstruct.Mapping;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+/**
+ * Interface of comment mapper
+ */
 @Component
 @Mapper(componentModel = "spring")
 public interface CommentMapper {

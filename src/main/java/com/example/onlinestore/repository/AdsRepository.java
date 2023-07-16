@@ -9,7 +9,9 @@ import com.example.onlinestore.model.AdsModel;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-
+/**
+ * Repository AdsRepository (ads/объявление).
+ */
 @Repository
 public interface AdsRepository extends JpaRepository <AdsModel, Integer> {
     @Query(value = "select * from ads order by id", nativeQuery = true)

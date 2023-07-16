@@ -7,7 +7,9 @@ import javax.persistence.*;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
-
+/**
+ * Class of ImageModel (изображение в объявлениях).
+ */
 @Entity
 @Data
 @NoArgsConstructor
@@ -18,11 +20,17 @@ import static javax.persistence.GenerationType.IDENTITY;
 @EqualsAndHashCode
 @ToString
 public class ImageModel {
+    /**
+     * "id изображения"
+     */
     @Id
     @GeneratedValue //(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Lob
     private byte[] image;
+    /**
+     * "объявление"
+     */
     @ToString.Exclude
     @OneToOne(fetch = FetchType.LAZY)
     private AdsModel adsModel;
