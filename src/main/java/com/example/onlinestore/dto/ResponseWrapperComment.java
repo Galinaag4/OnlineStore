@@ -5,12 +5,10 @@ import lombok.Data;
 import java.util.Collection;
 
 @Data
-public class ResponseWrapperComment<C> {
-    private final int count;
-    private final Collection<C> results;
+public class ResponseWrapperComment {
+    private  int count;
+    private  Collection<Comment> results;
 
-    public ResponseWrapperComment(Comment results) {
-        this.count = results.size();
-        this.results = results;
+    public ResponseWrapperComment() {
     }
 }

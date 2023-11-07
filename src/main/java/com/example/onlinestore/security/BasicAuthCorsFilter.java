@@ -1,5 +1,4 @@
-package com.example.onlinestore.controller;
-
+package com.example.onlinestore.security;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -21,4 +20,5 @@ public class BasicAuthCorsFilter extends OncePerRequestFilter {
         httpServletResponse.addHeader("Access-Control-Allow-Credentials", "true");
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
+
 }

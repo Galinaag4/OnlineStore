@@ -7,27 +7,56 @@ import javax.persistence.*;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
-
+/**
+ * Class of ImageModel (изображение в объявлениях).
+ */
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "image")
+@Table(name = "images")
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
 public class ImageModel {
+    /**
+     * "id изображения"
+     */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue //(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name = "path")
-    private String path;
     @Lob
-    @Type(type = "binary")
     private byte[] image;
-    private String mediaType;
-
+    /**
+     * "объявление"
+     */
     @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     private AdsModel adsModel;
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId (Integer id) {
+        this.id = id;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+    public AdsModel getAdsModel() {
+        return adsModel;
+    }
+
+    public void setAdsModel(AdsModel adsModel) {
+        this.adsModel = adsModel;
+    }
 
 
 

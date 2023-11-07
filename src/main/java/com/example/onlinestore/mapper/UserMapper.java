@@ -1,36 +1,47 @@
 package com.example.onlinestore.mapper;
 
 import com.example.onlinestore.dto.RegisterReq;
+import com.example.onlinestore.dto.Role;
 import com.example.onlinestore.dto.User;
 import com.example.onlinestore.model.UserModel;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-
-@Mapper(componentModel = "spring",unmappedTargetPolicy = ReportingPolicy.IGNORE)
+/**
+ * Interface of user mapper
+ */
+@Component
+@Mapper(componentModel = "spring")
 public interface UserMapper {
-    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
-    @Mapping(target = "id", source = "id")
-    @Mapping(target = "image", expression = "java(getImage(profileUser))")
-    User userModelToUser(UserModel userModel) throws IOException;
-
-    default String getImage(UserModel userModel) throws IOException {
-        if (userModel.getImage()==null||userModel.getImage().isEmpty()){
-            return null;
-        }
-        return "/users/"+userModel.getId()+"/getImage";
-    }
-
-
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
-            nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
-    @Mapping(target = "id", source = "id")
-    @Mapping(target = "image",ignore = true)
-    void partialUpdate(User user, @MappingTarget UserModel userModel);
-
+    User toUser(RegisterReq registerReq);
 
     @Mapping(source = "username", target = "email")
-    UserModel registerReqToUser(RegisterReq registerReq);
+    @Mapping(target = "image", expression = "java(getImageModel(userModel))")
+    void toUser(@MappingTarget User user, UserModel userModel);
+
+    default String getImageModel(UserModel userModel) {
+        if (userModel.getImageModel() == null) {
+            return null;
+        }
+        return "/users/image/" + userModel.getId() + "/from-db";
+    }
+
+    @Mapping(ignore = true, target = "userModel.id")
+    @Mapping(ignore = true, target = "userModel.imageModel")
+    @Mapping(ignore = true, target = "userModel.username")
+    void toUserModel(@MappingTarget UserModel userModel, User user);
+
+    public default UserModel mapRegisterReqToUserModel(RegisterReq registerReq) {
+        UserModel userModel = new UserModel();
+        userModel.setUsername(registerReq.getUsername());
+        userModel.setPassword(registerReq.getPassword());
+        userModel.setFirstName(registerReq.getFirstName());
+        userModel.setLastName(registerReq.getLastName());
+        userModel.setPhone(registerReq.getPhone());
+        userModel.setRole(Role.USER);
+        return userModel;
+    }
 }

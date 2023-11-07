@@ -11,4 +11,8 @@ public class User {
     public String phone;
     private String image;
 
+    public User() {
+    }
+
+
 }

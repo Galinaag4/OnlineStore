@@ -6,42 +6,43 @@ import com.example.onlinestore.dto.FullAds;
 import com.example.onlinestore.model.AdsModel;
 import com.example.onlinestore.model.ImageModel;
 import org.mapstruct.*;
-import org.mapstruct.factory.Mappers;
+import org.springframework.stereotype.Component;
 
-import java.awt.*;
 import java.util.Collection;
 import java.util.List;
-
-@Mapper(componentModel = "spring",unmappedTargetPolicy = ReportingPolicy.IGNORE)
+/**
+ * Interface of ads mapper
+ */
+@Component
+@Mapper(componentModel = "spring")
 public interface AdsMapper {
-    AdsMapper INSTANCE = Mappers.getMapper(AdsMapper.class);
 
+    AdsModel toAdsModel(CreateAds createAds);
     @Mapping(target = "pk", source = "id")
-    @Mapping(target = "author", source = "author.id")
-    @Mapping(target = "image", expression="java(mappedImages(adsModel))")
-    Ads adsModelToAds(AdsModel adsModel);
-
-
+    @Mapping(target = "author", source = "userModel.id")
+    @Mapping(target = "image", expression="java(getImageModel(adsModel))")
+    Ads adsModelToAds (AdsModel adsModel);
     @Mapping(target = "pk", source = "id")
-    @Mapping(target = "phone", source = "author.phone")
-    @Mapping(target = "email", source = "author.email")
-    @Mapping(target = "authorLastName", source = "author.lastName")
-    @Mapping(target = "authorFirstName", source = "author.firstName")
-    @Mapping(target = "image", expression="java(mappedImages(ads))")
-    FullAds toFullAds(AdsModel adsModel);
+    @Mapping(target = "authorFirstName", source = "userModel.firstName")
+    @Mapping(target = "authorLastName", source = "userModel.lastName")
+    @Mapping(target = "email", source = "userModel.username")
+    @Mapping(target = "phone", source = "userModel.phone")
+    @Mapping(target = "image", expression="java(getImageModel(adsModel))")
+    FullAds toFullAdsDto(AdsModel adsModel);
 
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
-            nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
-    AdsModel createAdsModelToAdsModel(CreateAds createAds);
-    default String mappedImages(AdsModel adsModel) {
-        List<Image> image= adsModel.getImages();
-        if (image == null||image.isEmpty()) {
+    default String getImageModel(AdsModel adsModel) {
+
+        if (adsModel.getImageModel() == null) {
             return null;
         }
-        return  "/ads/"+adsModel.getId()+"/getImage";
+        return "/ads/image/" + adsModel.getId() + "/from-db";
     }
+    List<Ads> adListToAdsDtoList(List<AdsModel> adList);
+
+    List<AdsModel> toModelList(Collection<Ads> adsCollection);
+
+    CreateAds adsModelToCreateAds(AdsModel adsModel);
 
 
-    Collection<Ads> adsModelCollectionToAds(Collection<AdsModel> adsModelsCollection);
 
 }

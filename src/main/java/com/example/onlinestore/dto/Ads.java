@@ -9,4 +9,8 @@ public class Ads {
     private Integer pk;
     private Integer price;
     private String title;
+
+    public Ads() {
+    }
+
 }

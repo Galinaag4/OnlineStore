@@ -7,15 +7,16 @@ import org.springframework.stereotype.Repository;
 import com.example.onlinestore.model.CommentModel;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
-
+/**
+ * Repository CommentRepository (comment/комментарий).
+ */
 @Repository
-public interface CommentRepository extends JpaRepository <CommentModel, Long> {
-    Integer getUserProfileId(int adsId, int commentId);
+public interface CommentRepository extends JpaRepository <CommentModel, Integer> {
+    List<CommentModel> findAllByAdsModelId(Integer adsModelId);
 
-    void deleteByAdsIdAndId(Integer adsId, Integer commentId);
+    Optional<CommentModel> findByAdsModel_IdAndId(Integer adsModelId, Integer commentId);
 
-    Optional<CommentModel> getByAdsIdAndId(Integer adsId, Integer commentId);
-    Collection<CommentModel> getByAdsId(Integer adsId);
-
+    void  deleteAllByAdsModel_Id (Integer id);
 }
